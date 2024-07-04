@@ -1,0 +1,4 @@
+.cache/
+bin/
+build.ps1
+compile_commands.json
