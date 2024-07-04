@@ -22,19 +22,26 @@ list(APPEND DEFINITIONS
 	USE_IMGUI
 )
 
+list(APPEND LIBRARIES
+	opengl32.lib
+	User32.lib
+	Gdi32.lib
+	Shell32.lib
+)
+
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 	set(ARCH64 ON)
 
 	list(APPEND LIBRARIES
-		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLEW/lib/Release/x64/glew32s.lib
 		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLFW/lib-vc2019/x64/glfw3.lib
+		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLEW/lib/Release/x64/glew32s.lib
 	)
 else()
 	set(ARCH64 OFF)
 
 	list(APPEND LIBRARIES
-		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLEW/lib/Release/Win32/glew32s.lib
 		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLFW/lib-vc2019/Win32/glfw3.lib
+		${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/dependencies/GLEW/lib/Release/Win32/glew32s.lib
 	)
 endif()
 
@@ -44,19 +51,20 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 	if (ARCH64)
 		list(APPEND LIBRARIES
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/lib/x64/Release/Engines.lib
-			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/x64/Release/GLCores.lib
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/MathLib/lib/x64/Release/MathLibs.lib
+			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/x64/Release/GLCores.lib
 		)
 	else()
 		list(APPEND LIBRARIES
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/lib/Win32/Release/Engines.lib
-			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/Win32/Release/GLCores.lib
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/MathLib/lib/Win32/Release/MathLibs.lib
+			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/Win32/Release/GLCores.lib
 		)
 	endif()
 else()
 	list(APPEND DEFINITIONS
 		DEBUG
+		ENGINE_DEBUG
 		GLCORE_DEBUG
 		MATH_DEBUG
 	)
@@ -64,14 +72,14 @@ else()
 	if (ARCH64)
 		list(APPEND LIBRARIES
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/lib/x64/Debug/Engines.lib
-			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/x64/Debug/GLCores.lib
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/MathLib/lib/x64/Debug/MathLibs.lib
+			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/x64/Debug/GLCores.lib
 		)
 	else()
 		list(APPEND LIBRARIES
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/lib/Win32/Debug/Engines.lib
-			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/Win32/Debug/GLCores.lib
 			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/MathLib/lib/Win32/Debug/MathLibs.lib
+			${CMAKE_SOURCE_DIR}/dependencies/Engine/dependencies/GLCore/lib/Win32/Debug/GLCores.lib
 		)
 	endif()
 endif()
