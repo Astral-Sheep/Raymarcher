@@ -1,0 +1,3 @@
+[submodule "dependencies/Engine"]
+	path = dependencies/Engine
+	url = https://github.com/Astral-Sheep/Engine.git

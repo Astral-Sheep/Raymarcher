@@ -1,8 +1,11 @@
-#include <iostream>
+#include "Engine/Application.hpp"
+
+using namespace Engine;
 
 int main()
 {
-	std::cout << "Hello world!" << std::endl;
+	std::unique_ptr<Application> app(new Application("Ray Marcher"));
+	app->Run();
 	return 0;
 }
 
