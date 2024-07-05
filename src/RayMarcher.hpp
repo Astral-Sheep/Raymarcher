@@ -10,7 +10,13 @@
 
 using namespace Engine;
 
-class RayMarcher : public Object
+enum class RaymarcherType
+{
+	Default,
+	MengerSponge,
+};
+
+class Raymarcher : public Object
 {
 private:
 	static constexpr float sVertices[4 * 2] = {
@@ -29,22 +35,29 @@ private:
 	GL::VertexBuffer mVBuffer;
 	GL::VertexBufferLayout mLayout;
 	GL::IndexBuffer mIBuffer;
+
+	Math::Vector3F mCameraPos;
+	Math::Vector2F mCameraRot;
+	float mCameraSpeed;
+	Math::Vector2F mMousePos;
+
+protected:
 	std::unique_ptr<GL::Shader> mShader;
 
-	Math::Vector3 mCameraPos;
-	Math::Vector2 mCameraRot;
-	float mCameraSpeed;
+	void InitShader();
+	virtual void _Process(const float pDelta) override;
+	virtual void _Render(const float pDelta) override;
+	virtual void _OnEvent(Event &pEvent) override;
 
 public:
-	RayMarcher();
-	~RayMarcher();
+	Raymarcher();
+	~Raymarcher();
 
-	void _Process(const float pDelta) override;
-	void _Render(const float pDelta) override;
-
-	inline const char *GetName() const override
+	inline virtual const char *GetName() const override
 	{
 		return "RayMarcher";
 	}
+
+	virtual RaymarcherType GetType() const = 0;
 };
 
