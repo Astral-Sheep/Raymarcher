@@ -8,6 +8,7 @@ class MengerSponge : public Raymarcher
 private:
 	Math::Vector3F mColor;
 	Math::Vector3F mLightColor;
+	Math::Vector3F mBackgroundColor;
 	int mIterationCount;
 
 	void _Render(const float pDelta) override;
@@ -16,14 +17,6 @@ private:
 public:
 	MengerSponge();
 
-	inline RaymarcherType GetType() const override
-	{
-		return RaymarcherType::MengerSponge;
-	}
-
-	inline const char *GetName() const override
-	{
-		return "MengerSponge";
-	}
+	RAYMARCHER(MengerSponge);
 };
 

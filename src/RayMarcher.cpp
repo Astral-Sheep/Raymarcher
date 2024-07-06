@@ -6,7 +6,6 @@
 #include "GLCore/core/GLRenderer.hpp"
 #include "GLFW/glfw3.h"
 #include <cmath>
-#include <iostream>
 
 using namespace GL;
 using namespace Math;

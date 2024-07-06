@@ -1,26 +1,33 @@
 #pragma once
 
-#include "RayMarcher.hpp"
 #include "Engine/Object.hpp"
+#include "Engine/utils/Memory.hpp"
 
 using namespace Engine;
 
 class Manager : public Object
 {
 private:
-	std::shared_ptr<Raymarcher> mRaymarcher;
+	Utils::SharedPtr<Object> mRaymarcher;
 
 	void _RenderImGUI(const float pDelta) override;
+
+	template<typename T, typename U>
+	inline T Cast(const U &pVal)
+	{
+		return *(T*)&pVal;
+	}
 
 	template<typename T>
 	void SetRaymarcher()
 	{
-		if (mRaymarcher.get())
+		if (mRaymarcher.Get())
 		{
+			RemoveChild(*mRaymarcher);
 			mRaymarcher->QueueFree();
 		}
 
-		mRaymarcher.reset(new T());
+		mRaymarcher = new T();
 		AddChild(*mRaymarcher);
 	}
 

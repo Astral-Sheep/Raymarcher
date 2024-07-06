@@ -2,6 +2,7 @@
 
 #include "Engine/Object.hpp"
 #include "Engine/events/Event.hpp"
+#include "Engine/utils/Memory.hpp"
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
 #include "GLCore/core/buffers/VertexArray.hpp"
@@ -14,6 +15,9 @@ enum class RaymarcherType
 {
 	Default,
 	MengerSponge,
+	FailedMengerSponge,
+	SierpinskiTetrahedron,
+	CantorDust,
 };
 
 class Raymarcher : public Object
@@ -42,7 +46,7 @@ private:
 	Math::Vector2F mMousePos;
 
 protected:
-	std::unique_ptr<GL::Shader> mShader;
+	Utils::UniquePtr<GL::Shader> mShader;
 
 	void InitShader();
 	virtual void _Process(const float pDelta) override;
@@ -60,4 +64,8 @@ public:
 
 	virtual RaymarcherType GetType() const = 0;
 };
+
+#define RAYMARCHER(Type)\
+	inline RaymarcherType GetType() const override { return RaymarcherType::Type; }\
+	inline const char *GetName() const override { return #Type; }
 

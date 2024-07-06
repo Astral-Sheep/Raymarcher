@@ -9,6 +9,7 @@ uniform vec2 u_CameraRot;
 uniform float u_Time;
 uniform vec3 u_Color;
 uniform vec3 u_LightColor;
+uniform vec3 u_BackgroundColor;
 uniform int u_IterationCount = 1;
 
 const int MAX_IT = 80;
@@ -136,7 +137,7 @@ float raymarch(const vec3 pPos, const vec3 pDir)
 vec3 get_normal(const vec3 pPos)
 {
 	float d = get_dist(pPos);
-	vec2 e = vec2(0.01f, 0.f);
+	vec2 e = vec2(0.0005f, 0.f);
 
 	return normalize(d - vec3(
 		get_dist(pPos - e.xyy),
@@ -147,20 +148,17 @@ vec3 get_normal(const vec3 pPos)
 
 vec3 get_light(const vec3 pPos, const vec3 pColor)
 {
-	vec3 lLightPos = vec3(10.f, 10.f, 12.f);
-	vec3 lLightDir = normalize(lLightPos - pPos);
+	vec3 lLightDir = normalize(vec3(5.f, 5.f, 6.f));
 	vec3 lNormal = get_normal(pPos);
-
-	float lDiffuse = clamp(dot(lNormal, lLightDir), 0.05f, 1.f);
-
+	float lDif = clamp(dot(lNormal, lLightDir), 0.f, 1.f);
 	float lDistance = raymarch(pPos + lNormal * MIN_SURF_DIST * 2.f, lLightDir);
 
-	if (lDistance < length(lLightPos - pPos))
+	if (lDistance < MAX_DIST)
 	{
-		lDiffuse *= 0.1f;
+		lDif *= 0.1f;
 	}
 
-	return pColor * lDiffuse;
+	return pColor * lDif;
 }
 
 void main()
@@ -171,11 +169,11 @@ void main()
 
 	if (lDist < MAX_DIST)
 	{
-		lColor = lColor * (1.f - 0.05f) + vec3(0.05f);
+		lColor += u_Color * vec3(0.1f);
 	}
 	else
 	{
-		lColor = vec3(0.f);
+		lColor = u_BackgroundColor;
 	}
 
 	color = vec4(lColor, 1.f);

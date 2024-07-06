@@ -4,7 +4,7 @@
 using namespace GL;
 
 MengerSponge::MengerSponge()
-	: Raymarcher(), mColor(1.f), mLightColor(1.f), mIterationCount(2)
+	: Raymarcher(), mColor(0.f, 0.86f, 0.46f), mLightColor(1.f), mBackgroundColor(1.f), mIterationCount(2)
 {
 	mShader.reset(Shader::FromGLSLTextFiles("res/vertex.glsl", "res/mengersponge.glsl"));
 	InitShader();
@@ -15,6 +15,7 @@ void MengerSponge::_Render(const float pDelta)
 	mShader->SetUniform1i("u_IterationCount", mIterationCount);
 	mShader->SetUniform3f("u_Color", mColor.r, mColor.g, mColor.b);
 	mShader->SetUniform3f("u_LightColor", mLightColor.r, mLightColor.g, mLightColor.b);
+	mShader->SetUniform3f("u_BackgroundColor", mBackgroundColor.r, mBackgroundColor.g, mBackgroundColor.b);
 	Raymarcher::_Render(pDelta);
 }
 
@@ -26,9 +27,10 @@ void MengerSponge::_RenderImGUI(const float pDelta)
 	ImGui::LabelText("", "Menger Sponge settings:");
 	ImGui::Separator();
 
-	ImGui::SliderInt("Iteration Count", &mIterationCount, 0, 10);
+	ImGui::SliderInt("Iteration Count", &mIterationCount, 0, 6);
 	ImGui::ColorEdit3("Color", (float*)&mColor);
 	ImGui::ColorEdit3("Light Color", (float*)&mLightColor);
+	ImGui::ColorEdit3("Background Color", (float*)&mBackgroundColor);
 
 	ImGui::End();
 }

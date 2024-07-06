@@ -9,11 +9,18 @@ uniform vec2 u_CameraRot;
 uniform float u_Time;
 uniform vec3 u_Color;
 uniform vec3 u_LightColor;
+uniform vec3 u_BackgroundColor;
 uniform int u_IterationCount = 1;
 
 const int MAX_IT = 80;
 const float MAX_DIST = 75.f;
 const float MIN_SURF_DIST = 0.001f;
+
+struct Sphere
+{
+	vec3 pos;
+	float radius;
+};
 
 struct Box
 {
@@ -43,6 +50,11 @@ vec3 get_ray_dir()
 	lRayDir.yz *= rot2(-u_CameraRot.x);
 	lRayDir.xz *= rot2(-u_CameraRot.y);
 	return lRayDir;
+}
+
+float sdf_sphere(const Sphere pSphere, const vec3 pCameraPos)
+{
+	return length(pCameraPos - pSphere.pos) - pSphere.radius;
 }
 
 float sdf_box(const Box pBox, const vec3 pCameraPos)
@@ -94,27 +106,17 @@ float op_intersection(const float pDist1, const float pDist2)
 float get_dist(const vec3 pPos)
 {
 	float d = sdf_box(Box(vec3(0.f), vec3(1.f)), pPos);
-	//float d = 0;
 	float s = 1.f;
 
 	for (int i = 0; i < u_IterationCount; i++)
 	{
-		//vec3 p = pPos - (1.f / s) * round(pPos * s);
 		vec3 p = mod(pPos + vec3(1.f / s), vec3(2.f / s)) - vec3(1.f / s);
 		float c = sdf_infinite_cross(Box(vec3(0.f), vec3(1.f / (s * 3.f))), p);
 		d = op_sub(d, c);
 		s *= 3.f;
-
-		//vec3 a = mod(pPos * s, vec3(2.f)) - vec3(1.f);
-		//s *= 3.f;
-		//vec3 r = vec3(1.f) - 3.f * abs(a);
-
-		//float c = sdf_infinite_cross(Box(r, vec3(1.f)), pPos) / s;
-		//d = max(d, c);
 	}
 
 	return d;
-	//return op_sub(sdf_box(Box(vec3(0.f), vec3(3.f)), pPos), sdf_infinite_cross(Box(vec3(0.f), vec3(1.f)), pPos));
 }
 
 float raymarch(const vec3 pPos, const vec3 pDir)
@@ -138,7 +140,7 @@ float raymarch(const vec3 pPos, const vec3 pDir)
 vec3 get_normal(const vec3 pPos)
 {
 	float d = get_dist(pPos);
-	vec2 e = vec2(0.01f, 0.f);
+	vec2 e = vec2(0.0005f, 0.f);
 
 	return normalize(d - vec3(
 		get_dist(pPos - e.xyy),
@@ -149,20 +151,17 @@ vec3 get_normal(const vec3 pPos)
 
 vec3 get_light(const vec3 pPos, const vec3 pColor)
 {
-	vec3 lLightPos = vec3(10.f, 10.f, 12.f);
-	vec3 lLightDir = normalize(lLightPos - pPos);
+	vec3 lLightDir = normalize(vec3(5.f, 5.f, 6.f));
 	vec3 lNormal = get_normal(pPos);
-
-	float lDiffuse = clamp(dot(lNormal, lLightDir), 0.05f, 1.f);
-
+	float lDif = clamp(dot(lNormal, lLightDir), 0.f, 1.f);
 	float lDistance = raymarch(pPos + lNormal * MIN_SURF_DIST * 2.f, lLightDir);
 
-	if (lDistance < length(lLightPos - pPos))
+	if (lDistance < MAX_DIST)
 	{
-		lDiffuse *= 0.1f;
+		lDif *= 0.1f;
 	}
 
-	return pColor * lDiffuse;
+	return pColor * lDif;
 }
 
 void main()
@@ -173,11 +172,11 @@ void main()
 
 	if (lDist < MAX_DIST)
 	{
-		lColor = lColor * (1.f - 0.05f) + vec3(0.05f);
+		lColor += u_Color * vec3(0.15f);
 	}
 	else
 	{
-		lColor = vec3(0.f);
+		lColor = u_BackgroundColor;
 	}
 
 	color = vec4(lColor, 1.f);
