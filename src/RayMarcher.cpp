@@ -5,6 +5,7 @@
 #include "math/Matrix2.hpp"
 #include "GLCore/core/GLRenderer.hpp"
 #include "GLFW/glfw3.h"
+#include "imgui/imgui.h"
 #include <cmath>
 
 using namespace GL;
@@ -14,7 +15,8 @@ Raymarcher::Raymarcher()
 	: mVArray(), mVBuffer(sVertices, sizeof(sVertices)), mLayout(),
 	mIBuffer(sIndices, 2 * 3),
 	mShader(nullptr),
-	mCameraPos(0.f), mCameraRot(0.f), mCameraSpeed(2.f)
+	mCameraPos(0.f), mCameraRot(0.f), mCameraSpeed(2.f),
+	mCameraSpeedMultiplier(1.f), mCameraRotationMultiplier(1.f)
 {
 	mLayout.Push<float>(2);
 	mVArray.AddBuffer(mVBuffer, mLayout);
@@ -41,8 +43,10 @@ void Raymarcher::_Process(const float pDelta)
 		mHorizontalVelocity.x,
 		Input::IsKeyPressed(KeyCode::Space) - Input::IsKeyPressed(KeyCode::LeftShift),
 		mHorizontalVelocity.y
-	) * mCameraSpeed * pDelta;
+	) * (mCameraSpeed * mCameraSpeedMultiplier * pDelta);
 }
+
+void Raymarcher::RenderImGuiParameters() {}
 
 void Raymarcher::_Render(const float pDelta)
 {
@@ -50,6 +54,25 @@ void Raymarcher::_Render(const float pDelta)
 	mShader->SetUniform2f("u_CameraRot", mCameraRot.x, mCameraRot.y);
 	mShader->SetUniform1f("u_Time", (float)glfwGetTime());
 	GLRenderer::DrawTriangles(mVArray, mIBuffer, *mShader);
+}
+
+void Raymarcher::_RenderImGUI(const float pDelta)
+{
+	constexpr float WINDOW_WIDTH = 500.f;
+
+	ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::SetWindowSize(ImVec2(WINDOW_WIDTH, 250.f));
+	ImGui::SetWindowPos(ImVec2(Application::Get().GetWindow().GetWidth() - 25.f - WINDOW_WIDTH, 25.f));
+
+	ImGui::LabelText("", "Camera options:");
+	ImGui::Separator();
+	ImGui::DragFloat("Camera movement multiplier", &mCameraSpeedMultiplier, 1.f, 0.01f, 10.f);
+	ImGui::DragFloat("Camera rotation multiplier", &mCameraRotationMultiplier, 1.f, 0.01f, 10.f);
+	ImGui::Dummy(ImVec2(0.f, 20.f));
+
+	RenderImGuiParameters();
+
+	ImGui::End();
 }
 
 void Raymarcher::_OnEvent(Event &pEvent)
@@ -60,8 +83,8 @@ void Raymarcher::_OnEvent(Event &pEvent)
 
 		if (Input::IsMouseButtonPressed(MouseButton::Right))
 		{
-			mCameraRot.x -= (lMouseMovedEvent.GetY() - mMousePos.y) / 500.f * (90.f * Math::DEG2RAD);
-			mCameraRot.y += (lMouseMovedEvent.GetX() - mMousePos.x) / 500.f * (90.f * Math::DEG2RAD);
+			mCameraRot.x -= (lMouseMovedEvent.GetY() - mMousePos.y) / 500.f * (90.f * Math::DEG2RAD) * mCameraRotationMultiplier;
+			mCameraRot.y += (lMouseMovedEvent.GetX() - mMousePos.x) / 500.f * (90.f * Math::DEG2RAD) * mCameraRotationMultiplier;
 		}
 
 		mMousePos.x = lMouseMovedEvent.GetX();

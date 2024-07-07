@@ -11,8 +11,9 @@ private:
 	Math::Vector3F mBackgroundColor;
 	int mIterationCount;
 
+	void RenderImGuiParameters() override;
 	void _Render(const float pDelta) override;
-	void _RenderImGUI(const float pDelta) override;
+	/* void _RenderImGUI(const float pDelta) override; */
 
 public:
 	MengerSponge();

@@ -43,14 +43,18 @@ private:
 	Math::Vector3F mCameraPos;
 	Math::Vector2F mCameraRot;
 	float mCameraSpeed;
+	float mCameraSpeedMultiplier;
+	float mCameraRotationMultiplier;
 	Math::Vector2F mMousePos;
 
 protected:
 	Utils::UniquePtr<GL::Shader> mShader;
 
 	void InitShader();
+	virtual void RenderImGuiParameters();
 	virtual void _Process(const float pDelta) override;
 	virtual void _Render(const float pDelta) override;
+	void _RenderImGUI(const float pDelta) override;
 	virtual void _OnEvent(Event &pEvent) override;
 
 public:

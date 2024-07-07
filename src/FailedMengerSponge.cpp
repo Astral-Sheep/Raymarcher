@@ -10,6 +10,17 @@ FailedMengerSponge::FailedMengerSponge()
 	InitShader();
 }
 
+void FailedMengerSponge::RenderImGuiParameters()
+{
+	ImGui::LabelText("", "Menger Sponge settings:");
+	ImGui::Separator();
+
+	ImGui::SliderInt("Iteration Count", &mIterationCount, 0, 6);
+	ImGui::ColorEdit3("Color", (float*)&mColor);
+	ImGui::ColorEdit3("Light Color", (float*)&mLightColor);
+	ImGui::ColorEdit3("Background Color", (float*)&mBackgroundColor);
+}
+
 void FailedMengerSponge::_Render(const float pDelta)
 {
 	mShader->SetUniform1i("u_IterationCount", mIterationCount);
@@ -19,20 +30,20 @@ void FailedMengerSponge::_Render(const float pDelta)
 	Raymarcher::_Render(pDelta);
 }
 
-void FailedMengerSponge::_RenderImGUI(const float pDelta)
-{
-	ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-	ImGui::SetWindowSize(ImVec2(300.f, 150.f));
-	ImGui::SetWindowPos(ImVec2(250.f, 25.f));
-	ImGui::LabelText("", "Menger Sponge settings:");
-	ImGui::Separator();
+/* void FailedMengerSponge::_RenderImGUI(const float pDelta) */
+/* { */
+/* 	ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove); */
+/* 	ImGui::SetWindowSize(ImVec2(300.f, 150.f)); */
+/* 	ImGui::SetWindowPos(ImVec2(250.f, 25.f)); */
+/* 	ImGui::LabelText("", "Menger Sponge settings:"); */
+/* 	ImGui::Separator(); */
 
-	ImGui::SliderInt("Iteration Count", &mIterationCount, 0, 6);
-	ImGui::ColorEdit3("Color", (float*)&mColor);
-	ImGui::ColorEdit3("Light Color", (float*)&mLightColor);
-	ImGui::ColorEdit3("Background Color", (float*)&mBackgroundColor);
+/* 	ImGui::SliderInt("Iteration Count", &mIterationCount, 0, 6); */
+/* 	ImGui::ColorEdit3("Color", (float*)&mColor); */
+/* 	ImGui::ColorEdit3("Light Color", (float*)&mLightColor); */
+/* 	ImGui::ColorEdit3("Background Color", (float*)&mBackgroundColor); */
 
-	ImGui::End();
-}
+/* 	ImGui::End(); */
+/* } */
 
 
