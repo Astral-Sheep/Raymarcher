@@ -3,8 +3,13 @@ target_sources(${PROJECT_NAME} PRIVATE
 	Manager.cpp
 	RayMarcher.cpp
 	DefaultRaymarcher.cpp
+	ShapesRaymarcher.cpp
+	BlendRaymarcher.cpp
 	MengerSponge.cpp
 	FailedMengerSponge.cpp
+	SierpinskiTetrahedron.cpp
+	JerusalemCube.cpp
+	FractalRaymarcher.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

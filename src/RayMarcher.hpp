@@ -14,15 +14,20 @@ using namespace Engine;
 enum class RaymarcherType
 {
 	Default,
+	ShapesRaymarcher,
+	BlendRaymarcher,
 	MengerSponge,
 	FailedMengerSponge,
 	SierpinskiTetrahedron,
+	JerusalemCube,
 	CantorDust,
+	FractalRaymarcher,
 };
 
 class Raymarcher : public Object
 {
 private:
+	// -- OpenGL --
 	static constexpr float sVertices[4 * 2] = {
 		-1.f, -1.f,
 		 1.f, -1.f,
@@ -40,6 +45,7 @@ private:
 	GL::VertexBufferLayout mLayout;
 	GL::IndexBuffer mIBuffer;
 
+	// -- Camera control --
 	Math::Vector3F mCameraPos;
 	Math::Vector2F mCameraRot;
 	float mCameraSpeed;
@@ -47,8 +53,21 @@ private:
 	float mCameraRotationMultiplier;
 	Math::Vector2F mMousePos;
 
+	// -- Parameters --
+	int mIterations;
+	float mMinDistance;
+	float mMaxDistance;
+	bool mDebugIterations;
+	Math::Vector3F mLightColor;
+	int mLightBounces;
+
+	// -- Framerate --
+	float mDelta;
+	float mFramerate;
+	float mFramerateUpdateDelay;
+
 protected:
-	Utils::UniquePtr<GL::Shader> mShader;
+	Memory::UniquePtr<GL::Shader> mShader;
 
 	void InitShader();
 	virtual void RenderImGuiParameters();

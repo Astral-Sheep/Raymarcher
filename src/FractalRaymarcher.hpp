@@ -3,20 +3,18 @@
 #include "RayMarcher.hpp"
 #include "math/Vector3.hpp"
 
-class FailedMengerSponge : public Raymarcher
+class FractalRaymarcher : public Raymarcher
 {
 private:
+	int mFractal;
+	int mFractalIterations;
 	Math::Vector3F mColor;
-	Math::Vector3F mBackgroundColor;
-	int mIterationCount;
 
 	void RenderImGuiParameters() override;
 	void _Render(const float pDelta) override;
 
 public:
-	FailedMengerSponge();
-
-	RAYMARCHER(FailedMengerSponge)
+	FractalRaymarcher();
+	RAYMARCHER(FractalRaymarcher)
 };
-
 

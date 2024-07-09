@@ -1,9 +1,8 @@
 #pragma once
 
 #include "RayMarcher.hpp"
-#include "math/Vector3.hpp"
 
-class FailedMengerSponge : public Raymarcher
+class SierpinskiTetrahedron : public Raymarcher
 {
 private:
 	Math::Vector3F mColor;
@@ -14,9 +13,7 @@ private:
 	void _Render(const float pDelta) override;
 
 public:
-	FailedMengerSponge();
-
-	RAYMARCHER(FailedMengerSponge)
+	SierpinskiTetrahedron();
+	RAYMARCHER(SierpinskiTetrahedron)
 };
-
 

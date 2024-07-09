@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RayMarcher.hpp"
 #include "Engine/Object.hpp"
 #include "Engine/utils/Memory.hpp"
 
@@ -8,7 +9,7 @@ using namespace Engine;
 class Manager : public Object
 {
 private:
-	Utils::SharedPtr<Object> mRaymarcher;
+	Memory::SharedPtr<Raymarcher> mRaymarcher;
 
 	void _RenderImGUI(const float pDelta) override;
 

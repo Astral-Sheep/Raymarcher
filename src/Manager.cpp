@@ -1,54 +1,44 @@
 #include "Manager.hpp"
-#include "DefaultRaymarcher.hpp"
-#include "FailedMengerSponge.hpp"
-#include "MengerSponge.hpp"
+/* #include "DefaultRaymarcher.hpp" */
+#include "FractalRaymarcher.hpp"
+#include "ShapesRaymarcher.hpp"
+#include "BlendRaymarcher.hpp"
+/* #include "MengerSponge.hpp" */
+/* #include "FailedMengerSponge.hpp" */
+/* #include "SierpinskiTetrahedron.hpp" */
+/* #include "JerusalemCube.hpp" */
 #include "imgui/imgui.h"
-#include <iostream>
 
 Manager::Manager()
-	: mRaymarcher(new MengerSponge())
+	: mRaymarcher(new ShapesRaymarcher())
 {
 	AddChild(*mRaymarcher);
 }
 
+#define RAYMARCHER_BUTTON(T, Class)\
+	if (mRaymarcher->GetType() != RaymarcherType::T)\
+	{\
+		if (ImGui::Button(#T))\
+		{\
+			SetRaymarcher<Class>();\
+		}\
+	}
+
 void Manager::_RenderImGUI(const float pDelta)
 {
 	ImGui::Begin("Selection", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-	ImGui::SetWindowSize(ImVec2(200.f, 125.f));
+	ImGui::SetWindowSize(ImVec2(200.f, 250.f));
 	ImGui::SetWindowPos(ImVec2(25.f, 25.f));
 	ImGui::LabelText("", "Raymarchers:");
 	ImGui::Separator();
 
-	Raymarcher *lRaymarcher = Cast<Raymarcher*>(mRaymarcher.Get());
-
-	if (lRaymarcher->GetType() != RaymarcherType::Default)
-	{
-		if (ImGui::Button("Default"))
-		{
-			SetRaymarcher<DefaultRaymarcher>();
-			std::cout << "OK Default" << std::endl;
-		}
-	}
-
-	if (lRaymarcher->GetType() != RaymarcherType::MengerSponge)
-	{
-		if (ImGui::Button("Menger Sponge"))
-		{
-			SetRaymarcher<MengerSponge>();
-			std::cout << "OK Sponge" << std::endl;
-		}
-	}
-
-	if (lRaymarcher->GetType() != RaymarcherType::FailedMengerSponge)
-	{
-		if (ImGui::Button("Failed Menger Sponge"))
-		{
-			SetRaymarcher<FailedMengerSponge>();
-			std::cout << "OK Failed Sponge" << std::endl;
-		}
-	}
+	/* RAYMARCHER_BUTTON(Default, DefaultRaymarcher) */
+	RAYMARCHER_BUTTON(ShapesRaymarcher, ShapesRaymarcher)
+	RAYMARCHER_BUTTON(BlendRaymarcher, BlendRaymarcher)
+	/* RAYMARCHER_BUTTON(FailedMengerSponge, FailedMengerSponge) */
+	/* RAYMARCHER_BUTTON(SierpinskiTetrahedron, SierpinskiTetrahedron) */
+	RAYMARCHER_BUTTON(FractalRaymarcher, FractalRaymarcher)
 
 	ImGui::End();
-	std::cout << "ImGui completed" << std::endl;
 }
 

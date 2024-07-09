@@ -1,16 +1,12 @@
 #pragma once
 
 #include "RayMarcher.hpp"
-#include "math/Vector3.hpp"
 
 class DefaultRaymarcher : public Raymarcher
 {
 private:
-	Math::Vector3F mLightColor;
-
 	void RenderImGuiParameters() override;
 	void _Render(const float pDelta) override;
-	/* void _RenderImGUI(const float pDelta) override; */
 
 public:
 	DefaultRaymarcher();

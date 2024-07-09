@@ -148,7 +148,7 @@ vec3 get_normal(const vec3 pPos)
 
 vec3 get_light(const vec3 pPos, const vec3 pColor)
 {
-	vec3 lLightDir = normalize(vec3(5.f, 5.f, 6.f));
+	vec3 lLightDir = normalize(vec3(4.f, 5.f, -6.f));
 	vec3 lNormal = get_normal(pPos);
 	float lDif = clamp(dot(lNormal, lLightDir), 0.f, 1.f);
 	float lDistance = raymarch(pPos + lNormal * MIN_SURF_DIST * 2.f, lLightDir);
