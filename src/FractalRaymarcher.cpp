@@ -26,7 +26,7 @@ FractalRaymarcher::FractalRaymarcher()
 
 void FractalRaymarcher::RenderImGuiParameters()
 {
-	if (ImGui::CollapsingHeader("Fractals settings:"))
+	if (ImGui::CollapsingHeader("Fractals"))
 	{
 		ImGui::Combo("Fractal", &mFractal, fractals, Max);
 		ImGui::SliderInt("Iterations", &mFractalIterations, 0, 10);

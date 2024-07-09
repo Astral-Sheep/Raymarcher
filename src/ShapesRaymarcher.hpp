@@ -14,6 +14,6 @@ private:
 
 public:
 	ShapesRaymarcher();
-	RAYMARCHER(ShapesRaymarcher)
+	RAYMARCHER(Shapes)
 };
 

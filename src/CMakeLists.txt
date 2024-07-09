@@ -2,13 +2,14 @@ target_sources(${PROJECT_NAME} PRIVATE
 	Main.cpp
 	Manager.cpp
 	RayMarcher.cpp
-	DefaultRaymarcher.cpp
+	# DefaultRaymarcher.cpp
 	ShapesRaymarcher.cpp
 	BlendRaymarcher.cpp
-	MengerSponge.cpp
-	FailedMengerSponge.cpp
-	SierpinskiTetrahedron.cpp
-	JerusalemCube.cpp
+	Repetition.cpp
+	# MengerSponge.cpp
+	# FailedMengerSponge.cpp
+	# SierpinskiTetrahedron.cpp
+	# JerusalemCube.cpp
 	FractalRaymarcher.cpp
 )
 

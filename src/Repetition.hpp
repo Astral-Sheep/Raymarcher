@@ -3,18 +3,17 @@
 #include "RayMarcher.hpp"
 #include "math/Vector3.hpp"
 
-class FractalRaymarcher : public Raymarcher
+class Repetition : public Raymarcher
 {
 private:
-	int mFractal;
-	int mFractalIterations;
 	Math::Vector3F mColor;
+	Math::Vector3F mMod;
+	int mShape;
 
 	void RenderImGuiParameters() override;
 	void _Render(const float pDelta) override;
 
 public:
-	FractalRaymarcher();
-	RAYMARCHER(Fractals)
+	Repetition();
+	RAYMARCHER(Repetition)
 };
-

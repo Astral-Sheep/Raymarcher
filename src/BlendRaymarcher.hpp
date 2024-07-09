@@ -22,6 +22,6 @@ private:
 
 public:
 	BlendRaymarcher();
-	RAYMARCHER(BlendRaymarcher)
+	RAYMARCHER(Blend)
 };
 

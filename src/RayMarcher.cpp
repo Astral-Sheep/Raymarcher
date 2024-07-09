@@ -11,6 +11,7 @@
 #include "imgui/imgui.h"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 using namespace GL;
 using namespace Math;
@@ -81,7 +82,7 @@ void Raymarcher::_RenderImGUI(const float pDelta)
 		mDelta = Math::EuclidianRemainder(mDelta, mFramerateUpdateDelay);
 	}
 
-	ImGui::Begin("Options", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Raymarcher", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	ImGui::SetWindowSize(ImVec2(WINDOW_WIDTH, 250.f));
 	ImGui::SetWindowPos(ImVec2(Application::Get().GetWindow().GetWidth() - 25.f - WINDOW_WIDTH, 25.f));
 
@@ -90,7 +91,7 @@ void Raymarcher::_RenderImGUI(const float pDelta)
 	ImGui::Text("Options:");
 	ImGui::Separator();
 
-	if (ImGui::CollapsingHeader("Raymarching:"))
+	if (ImGui::CollapsingHeader("Raymarching"))
 	{
 		ImGui::Checkbox("Show iteration count debug", &mDebugIterations);
 

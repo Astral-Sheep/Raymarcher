@@ -13,15 +13,16 @@ using namespace Engine;
 
 enum class RaymarcherType
 {
-	Default,
-	ShapesRaymarcher,
-	BlendRaymarcher,
-	MengerSponge,
-	FailedMengerSponge,
-	SierpinskiTetrahedron,
-	JerusalemCube,
-	CantorDust,
-	FractalRaymarcher,
+	/* Default, */
+	Shapes,
+	Blend,
+	Repetition,
+	/* MengerSponge, */
+	/* FailedMengerSponge, */
+	/* SierpinskiTetrahedron, */
+	/* JerusalemCube, */
+	/* CantorDust, */
+	Fractals,
 };
 
 class Raymarcher : public Object
@@ -53,6 +54,12 @@ private:
 	float mCameraRotationMultiplier;
 	Math::Vector2F mMousePos;
 
+	// -- Framerate --
+	float mDelta;
+	float mFramerate;
+	float mFramerateUpdateDelay;
+
+protected:
 	// -- Parameters --
 	int mIterations;
 	float mMinDistance;
@@ -60,11 +67,6 @@ private:
 	bool mDebugIterations;
 	Math::Vector3F mLightColor;
 	int mLightBounces;
-
-	// -- Framerate --
-	float mDelta;
-	float mFramerate;
-	float mFramerateUpdateDelay;
 
 protected:
 	Memory::UniquePtr<GL::Shader> mShader;
@@ -78,7 +80,7 @@ protected:
 
 public:
 	Raymarcher();
-	~Raymarcher();
+	virtual ~Raymarcher();
 
 	inline virtual const char *GetName() const override
 	{

@@ -12,6 +12,7 @@ private:
 	Memory::SharedPtr<Raymarcher> mRaymarcher;
 
 	void _RenderImGUI(const float pDelta) override;
+	void _OnEvent(Event &pEvent) override;
 
 	template<typename T, typename U>
 	inline T Cast(const U &pVal)
