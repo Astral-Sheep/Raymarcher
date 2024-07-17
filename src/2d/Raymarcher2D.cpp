@@ -64,7 +64,7 @@ namespace _2D
 			case EventType::MouseScrolled:
 			{
 				MouseScrolledEvent lMSEvent = pEvent.Cast<MouseScrolledEvent>();
-				mZoom = Math::Clamp(mZoom + lMSEvent.GetYOffset(), -20.f, 10.f);
+				mZoom = Math::Clamp(mZoom + lMSEvent.GetYOffset(), -10.f, 20.f);
 				pEvent.handled = true;
 				break;
 			}
