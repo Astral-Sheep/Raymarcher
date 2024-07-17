@@ -1,4 +1,5 @@
 #include "Manager.hpp"
+#include "2d/BlendRaymarcher.hpp"
 #include "2d/ShapesRaymarcher.hpp"
 #include "3d/ShapesRaymarcher.hpp"
 #include "3d/BlendRaymarcher.hpp"
@@ -35,6 +36,7 @@ void Manager::_RenderImGUI(const float pDelta)
 	if (ImGui::CollapsingHeader("2D"))
 	{
 		RAYMARCHER_BUTTON(Shapes2D, _2D::ShapesRaymarcher)
+		RAYMARCHER_BUTTON(Blend2D, _2D::BlendRaymarcher)
 	}
 
 	if (ImGui::CollapsingHeader("3D"))

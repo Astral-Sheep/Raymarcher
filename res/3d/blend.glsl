@@ -81,6 +81,11 @@ float smooth_intersect(const float d1, const float d2, const float k)
 	return mix(d2, d1, h) + k * h * (1.f - h);
 }
 
+float smooth_xor(const float d1, const float d2, const float k)
+{
+	return op_sub(smooth_union(d1, d2, k), smooth_intersect(d1, d2, k));
+}
+
 float get_dist(const vec3 pCameraPos)
 {
 	float d = u_MaxDistance;
