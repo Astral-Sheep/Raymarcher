@@ -160,8 +160,8 @@ void main()
 
 	for (int i = 0; i < u_LightBounces; i++)
 	{
-		RaymarchData data = raymarch(ro, rd, true);
-		vec3 p = ro + rd * data.d;
+		RaymarchData data = raymarch(ro, rd, i == 0);
+		vec3 p = op_repetition(ro + rd * data.d, u_Mod);
 		vec3 n = get_normal(p);
 
 		float diffuse = max(0.f, dot(n, lightDir));
@@ -176,7 +176,7 @@ void main()
 		}
 		else
 		{
-			color.rgb += c * exp(1.f - data.mn * 50.f) * get_rainbow() * 0.1f;
+			color.rgb += c * exp(1.f - data.mn * 5.f) * get_rainbow() * 0.1f;
 			break;
 		}
 	}

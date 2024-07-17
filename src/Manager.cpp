@@ -1,20 +1,16 @@
 #include "Manager.hpp"
-/* #include "DefaultRaymarcher.hpp" */
-#include "Repetition.hpp"
-#include "ShapesRaymarcher.hpp"
-#include "BlendRaymarcher.hpp"
-#include "FractalRaymarcher.hpp"
-/* #include "MengerSponge.hpp" */
-/* #include "FailedMengerSponge.hpp" */
-/* #include "SierpinskiTetrahedron.hpp" */
-/* #include "JerusalemCube.hpp" */
+#include "2d/ShapesRaymarcher.hpp"
+#include "3d/ShapesRaymarcher.hpp"
+#include "3d/BlendRaymarcher.hpp"
+#include "3d/RepetitionRaymarcher.hpp"
+#include "3d/FractalRaymarcher.hpp"
 #include "imgui/imgui.h"
 #include "Engine/Application.hpp"
 #include "Engine/events/KeyboardEvent.hpp"
 #include "Engine/events/KeyCodes.h"
 
 Manager::Manager()
-	: mRaymarcher(new ShapesRaymarcher())
+	: mRaymarcher(new _2D::ShapesRaymarcher())
 {
 	AddChild(*mRaymarcher);
 }
@@ -36,13 +32,18 @@ void Manager::_RenderImGUI(const float pDelta)
 	ImGui::LabelText("", "Raymarchers:");
 	ImGui::Separator();
 
-	/* RAYMARCHER_BUTTON(Default, DefaultRaymarcher) */
-	RAYMARCHER_BUTTON(Shapes, ShapesRaymarcher)
-	RAYMARCHER_BUTTON(Blend, BlendRaymarcher)
-	RAYMARCHER_BUTTON(Repetition, Repetition)
-	/* RAYMARCHER_BUTTON(FailedMengerSponge, FailedMengerSponge) */
-	/* RAYMARCHER_BUTTON(SierpinskiTetrahedron, SierpinskiTetrahedron) */
-	RAYMARCHER_BUTTON(Fractals, FractalRaymarcher)
+	if (ImGui::CollapsingHeader("2D"))
+	{
+		RAYMARCHER_BUTTON(Shapes2D, _2D::ShapesRaymarcher)
+	}
+
+	if (ImGui::CollapsingHeader("3D"))
+	{
+		RAYMARCHER_BUTTON(Shapes3D, _3D::ShapesRaymarcher)
+		RAYMARCHER_BUTTON(Blend3D, _3D::BlendRaymarcher)
+		RAYMARCHER_BUTTON(Repetition3D, _3D::RepetitionRaymarcher)
+		RAYMARCHER_BUTTON(Fractals3D, _3D::FractalRaymarcher)
+	}
 
 	ImGui::End();
 }
@@ -56,6 +57,7 @@ void Manager::_OnEvent(Event &pEvent)
 		if (lEvent.GetKeyCode() == (int)KeyCode::F11)
 		{
 			Application::Get().GetWindow().SetFullscreen(!Application::Get().GetWindow().IsFullscreen());
+			pEvent.handled = true;
 		}
 	}
 }

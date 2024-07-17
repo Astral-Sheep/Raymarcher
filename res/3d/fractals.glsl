@@ -34,6 +34,16 @@ struct RaymarchData
 	int it;
 };
 
+mat2 rot2(const float a)
+{
+	float cos = cos(a);
+	float sin = sin(a);
+	return mat2(
+		cos, -sin,
+		sin,  cos
+	);
+}
+
 float sdf_sphere(const vec3 p, const float r)
 {
 	return length(p) - r;
@@ -77,6 +87,7 @@ float sdf_mengersponge(const vec3 p, const vec3 e)
 
 float sdf_jerusalemcube(in vec3 p, const vec3 e)
 {
+	// I found this algorithm on the internet and was too lazy to optimize it, so the lighting is really expensive
 	const float vB = 0.4f;
 	const float vA = 1.f - 2.f * vB;
 	float s = 1.f;
@@ -117,6 +128,81 @@ float sdf_jerusalemcube(in vec3 p, const vec3 e)
 
 	return sdf_box(p, vec3(0.5f)) * s;
 }
+
+//float sdf_sierpinskitetrahedron(in vec3 p, const float s)
+//{
+	//float o = 3.f;
+	//float r;
+	//int n = 0;
+
+	//while (n < u_IterationCount)
+	//{
+		//if (p.x + p.y < 0.f)
+		//{
+			//p.xy = -p.yx;
+		//}
+
+		//if (p.x + p.z < 0.f)
+		//{
+			//p.xz = -p.zx;
+		//}
+
+		//if (p.y + p.z < 0.f)
+		//{
+			//p.zy = -p.yz;
+		//}
+
+		//p = p * s - vec3(o) * (s - 1.f);
+		//n++;
+	//}
+
+	//return length(p) * pow(s, -n);
+//}
+
+//float sdf_kochcurve(in vec3 p)
+//{
+	//const float C1 = 1.73205081f;
+	//const float C2 = 1.15470053839f;
+
+	//const float cos = cos(PI / 3.f);
+	//const float sin = sin(PI / 3.f);
+	//const mat2 rot60 = mat2(
+		//cos, -sin,
+		//sin,  cos
+	//);
+	//const mat2 rotm60 = mat2(
+		// cos, sin,
+		//-sin, cos
+	//);
+
+	//float s = 1.f;
+
+	//for (int i = 0; i < u_IterationCount; i++)
+	//{
+		//const float x1 = 2.f / 3.f;
+		//s *= x1;
+		//p /= x1;
+
+		//if (abs(p.z) > -p.x * C1)
+		//{
+			//p.x *= -1.f;
+			//p.xz = (p.z > 0 ? rotm60 : rot60) * p.xz;
+		//}
+
+		//p.zy = p.yz;
+		//p.x++;
+	//}
+
+	//if (abs(p.z) > p.x * C1)
+	//{
+		//p.x *= -1.f;
+		//p.xz = (p.z > 0 ? rot60 : rotm60) * p.xz;
+	//}
+
+	//float d = abs(p.y) + C2 * p.x - C2;
+	//d *= 1.f / sqrt(1.f + C2 * C2) * s;
+	//return d;
+//}
 
 vec4 get_dist(const vec3 p)
 {
@@ -194,23 +280,19 @@ RaymarchData raymarch(const vec3 p, const vec3 dir)
 	return RaymarchData(d, mn, c, i);
 }
 
-mat2 rot2(const float a)
+float osc(const float v, const float o)
 {
-	float cos = cos(a);
-	float sin = sin(a);
-	return mat2(
-		cos, -sin,
-		sin,  cos
-	);
+	return clamp((-abs(mod(v + o, 3.f) - 1.f) + 1.f) * 2.f, 0.f, 1.f);
 }
 
 vec3 get_rainbow()
 {
 	float t = u_Time * 0.25f;
+
 	return vec3(
-		2.f * cos(t),
-		2.f * cos(t + 2.f * PI / 3.f),
-		2.f * cos(t + 4.f * PI / 3.f)
+		osc(t, -1.f),
+		osc(t, 0.f),
+		osc(t, 1.f)
 	);
 }
 

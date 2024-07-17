@@ -14,12 +14,6 @@ private:
 	void _RenderImGUI(const float pDelta) override;
 	void _OnEvent(Event &pEvent) override;
 
-	template<typename T, typename U>
-	inline T Cast(const U &pVal)
-	{
-		return *(T*)&pVal;
-	}
-
 	template<typename T>
 	void SetRaymarcher()
 	{

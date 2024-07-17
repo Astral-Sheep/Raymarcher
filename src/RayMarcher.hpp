@@ -3,8 +3,6 @@
 #include "Engine/Object.hpp"
 #include "Engine/events/Event.hpp"
 #include "Engine/utils/Memory.hpp"
-#include "math/Vector2.hpp"
-#include "math/Vector3.hpp"
 #include "GLCore/core/buffers/VertexArray.hpp"
 #include "GLCore/core/buffers/IndexBuffer.hpp"
 #include "GLCore/core/Shader.hpp"
@@ -13,16 +11,14 @@ using namespace Engine;
 
 enum class RaymarcherType
 {
-	/* Default, */
-	Shapes,
-	Blend,
-	Repetition,
-	/* MengerSponge, */
-	/* FailedMengerSponge, */
-	/* SierpinskiTetrahedron, */
-	/* JerusalemCube, */
-	/* CantorDust, */
-	Fractals,
+	Shapes2D,
+	Blend2D,
+	Repetition2D,
+	Fractals2D,
+	Shapes3D,
+	Blend3D,
+	Repetition3D,
+	Fractals3D,
 };
 
 class Raymarcher : public Object
@@ -46,34 +42,17 @@ private:
 	GL::VertexBufferLayout mLayout;
 	GL::IndexBuffer mIBuffer;
 
-	// -- Camera control --
-	Math::Vector3F mCameraPos;
-	Math::Vector2F mCameraRot;
-	float mCameraSpeed;
-	float mCameraSpeedMultiplier;
-	float mCameraRotationMultiplier;
-	Math::Vector2F mMousePos;
-
 	// -- Framerate --
 	float mDelta;
 	float mFramerate;
 	float mFramerateUpdateDelay;
 
 protected:
-	// -- Parameters --
-	int mIterations;
-	float mMinDistance;
-	float mMaxDistance;
-	bool mDebugIterations;
-	Math::Vector3F mLightColor;
-	int mLightBounces;
-
-protected:
 	Memory::UniquePtr<GL::Shader> mShader;
 
+protected:
 	void InitShader();
 	virtual void RenderImGuiParameters();
-	virtual void _Process(const float pDelta) override;
 	virtual void _Render(const float pDelta) override;
 	void _RenderImGUI(const float pDelta) override;
 	virtual void _OnEvent(Event &pEvent) override;

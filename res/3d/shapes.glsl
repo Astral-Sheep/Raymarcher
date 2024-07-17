@@ -19,10 +19,6 @@ uniform vec3 u_Color;
 uniform vec3 u_BackgroundColor;
 uniform int u_Shape;
 
-//const int MAX_IT = 80;
-//const float MAX_DIST = 75.f;
-//const float MIN_SURF_DIST = 0.001f;
-
 const float PI = 3.1415926535f;
 const float EPSILON = 0.00002f;
 
