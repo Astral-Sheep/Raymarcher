@@ -1,5 +1,7 @@
 #include "Manager.hpp"
 #include "2d/BlendRaymarcher.hpp"
+#include "2d/FractalRaymarcher.hpp"
+#include "2d/RepetitionRaymarcher.hpp"
 #include "2d/ShapesRaymarcher.hpp"
 #include "3d/ShapesRaymarcher.hpp"
 #include "3d/BlendRaymarcher.hpp"
@@ -11,7 +13,7 @@
 #include "Engine/events/KeyCodes.h"
 
 Manager::Manager()
-	: mRaymarcher(new _2D::ShapesRaymarcher())
+	: mRaymarcher(new _2D::FractalRaymarcher())
 {
 	AddChild(*mRaymarcher);
 }
@@ -37,6 +39,8 @@ void Manager::_RenderImGUI(const float pDelta)
 	{
 		RAYMARCHER_BUTTON(Shapes2D, _2D::ShapesRaymarcher)
 		RAYMARCHER_BUTTON(Blend2D, _2D::BlendRaymarcher)
+		RAYMARCHER_BUTTON(Repetition2D, _2D::RepetitionRaymarcher)
+		RAYMARCHER_BUTTON(Fractals2D, _2D::FractalRaymarcher)
 	}
 
 	if (ImGui::CollapsingHeader("3D"))

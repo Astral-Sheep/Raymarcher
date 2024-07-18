@@ -878,7 +878,7 @@ void main()
 		}
 	}
 
-	float d = get_dist(u_CameraPos + uv * zoom);
+	float d = get_dist(u_CameraPos + uv * zoom) * pow(1.25f, u_Zoom);
 	vec3 c = d > 0.f ? u_OutColor : u_InColor;
 	c *= 1.f - exp(-6.f * abs(d));
 	c *= 0.8f + 0.2f * cos(150.f * d);

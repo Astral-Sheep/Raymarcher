@@ -12,6 +12,7 @@ namespace _2D
 		float mCameraSpeed;
 		float mCameraSpeedMultiplier;
 		float mZoom;
+		Math::Vector2F mMousePos;
 
 	protected:
 		virtual void _Process(const float pDelta) override;

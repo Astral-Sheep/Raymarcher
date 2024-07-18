@@ -5,6 +5,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 	2d/Raymarcher2D.cpp
 	2d/ShapesRaymarcher.cpp
 	2d/BlendRaymarcher.cpp
+	2d/RepetitionRaymarcher.cpp
+	2d/FractalRaymarcher.cpp
 	3d/Raymarcher3D.cpp
 	3d/ShapesRaymarcher.cpp
 	3d/BlendRaymarcher.cpp

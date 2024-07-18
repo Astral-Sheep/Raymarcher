@@ -116,7 +116,7 @@ float get_dist(const vec3 pCameraPos)
 			d = smooth_intersect(b, s, u_BlendFactor);
 			break;
 		case SMOOTH_XOR:
-			d = smooth_union(b, s, u_BlendFactor);
+			d = smooth_xor(b, s, u_BlendFactor);
 			break;
 		default:
 			break;

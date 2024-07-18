@@ -29,7 +29,7 @@ namespace _2D
 		mCameraPos += Vector2F(
 			Input::IsKeyPressed(KeyCode::D) - Input::IsKeyPressed(KeyCode::A),
 			Input::IsKeyPressed(KeyCode::W) - Input::IsKeyPressed(KeyCode::S)
-		).Normalized() * (mCameraSpeed * mCameraSpeedMultiplier * pDelta);
+		).Normalized() * (mCameraSpeed * mCameraSpeedMultiplier * std::pow(1.25f, -mZoom) * pDelta);
 	}
 
 	void Raymarcher2D::_Render(const float pDelta)
@@ -53,11 +53,24 @@ namespace _2D
 			case EventType::MouseMoved:
 			{
 				MouseMovedEvent &lMMEvent = pEvent.Cast<MouseMovedEvent>();
+
+				if (Input::IsMouseButtonPressed(MouseButton::Right))
+				{
+					const float p = std::pow(1.25f, -mZoom);
+					mCameraPos += Vector2F(
+						(lMMEvent.GetX() - mMousePos.x) * -0.0055f * p, // I'm too lazy to get a global value, this one only works in 1280x720
+						(lMMEvent.GetY() - mMousePos.y) * 0.0055f * p
+					);
+				}
+
+				mMousePos.x = lMMEvent.GetX();
+				mMousePos.y = lMMEvent.GetY();
 				mShader->SetUniform2f(
 					"u_MousePos",
-					lMMEvent.GetX() / Application::Get().GetWindow().GetHeight(),
-					-lMMEvent.GetY() / Application::Get().GetWindow().GetHeight()
+					mMousePos.x / Application::Get().GetWindow().GetHeight(),
+					-mMousePos.y / Application::Get().GetWindow().GetHeight()
 				);
+
 				pEvent.handled = true;
 				break;
 			}
