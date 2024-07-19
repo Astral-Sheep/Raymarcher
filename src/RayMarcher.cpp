@@ -1,6 +1,7 @@
 #include "RayMarcher.hpp"
 #include "Engine/Application.hpp"
 #include "Engine/Time.hpp"
+#include "Engine/Window.hpp"
 #include "Engine/events/WindowEvent.hpp"
 #include "math/Math.hpp"
 #include "GLCore/core/GLRenderer.hpp"
@@ -24,7 +25,8 @@ Raymarcher::~Raymarcher() {}
 
 void Raymarcher::InitShader()
 {
-	mShader->SetUniform1f("u_AspectRatio", (float)Application::Get().GetWindow().GetWidth() / Application::Get().GetWindow().GetHeight());
+	Window &lWindow = Application::Get().GetWindow();
+	mShader->SetUniform2i("u_ScreenSize", lWindow.GetWidth(), lWindow.GetHeight());
 }
 
 void Raymarcher::RenderImGuiParameters() {}
@@ -67,7 +69,7 @@ void Raymarcher::_OnEvent(Event &pEvent)
 	if (pEvent.GetEventType() == EventType::WindowResize)
 	{
 		WindowResizeEvent &lWREvent = pEvent.Cast<WindowResizeEvent>();
-		mShader->SetUniform1f("u_AspectRatio", (float)lWREvent.GetWidth() / lWREvent.GetHeight());
+		mShader->SetUniform2i("u_ScreenSize", lWREvent.GetWidth(), lWREvent.GetHeight());
 		lWREvent.handled = true;
 	}
 }

@@ -46,9 +46,9 @@ const int CIRCLE_WAVE = 38;
 layout(location = 0) out vec4 color;
 
 in vec2 v_UV;
+in float v_AspectRatio;
 
 // -- Default parameters --
-uniform float u_AspectRatio;
 uniform vec2 u_CameraPos;
 uniform float u_Zoom;
 uniform vec2 u_MousePos;
@@ -859,7 +859,7 @@ void main()
 	if (u_ShowMouseDistance)
 	{
 		vec2 mpos = u_MousePos;
-		mpos.x -= u_AspectRatio * 0.5f;
+		mpos.x -= v_AspectRatio * 0.5f;
 		mpos.y += 0.5f;
 		mpos *= 4.f; // 2 (default) x 2 (UV multiplier)
 

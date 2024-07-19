@@ -9,9 +9,9 @@ const int KOCH_CURVE = 2;
 layout(location = 0) out vec4 color;
 
 in vec2 v_UV;
+in float v_AspectRatio;
 
 // -- Default parameters --
-uniform float u_AspectRatio;
 uniform vec2 u_CameraPos;
 uniform float u_Zoom;
 uniform vec2 u_MousePos;
@@ -157,7 +157,7 @@ void main()
 	if (u_ShowMouseDistance)
 	{
 		vec2 mpos = u_MousePos;
-		mpos.x -= u_AspectRatio * 0.5f;
+		mpos.x -= v_AspectRatio * 0.5f;
 		mpos.y += 0.5f;
 		mpos *= 4.f; // 2 (default) x 2 (UV multiplier)
 
@@ -169,7 +169,7 @@ void main()
 			color = vec4(1.f);
 			return;
 		}
-		else if (l >= d - 0.0075f * zoom && l <= d + 0.0075f * zoom)
+		else if (l >= d - 0.005f * zoom && l <= d + 0.005f * zoom)
 		{
 			color = vec4(get_rainbow(atan(uv.y - mpos.y, uv.x - mpos.x) / (2.f * PI)), 1.f);
 			return;
@@ -183,7 +183,7 @@ void main()
 	{
 		d *= pow(1.25f, u_Zoom);
 		c = d > 0.f ? vec3(1.f) : get_rainbow(uv.x * 0.025f + uv.y * 0.025f);
-		c *= 1.f - exp(-6.f * abs(d));
+		c *= 1.f - exp(-25.f * abs(d));
 		c *= 0.8f + 0.2f * cos(150.f * d);
 		c = mix(c, vec3(1.f), 1.f - smoothstep(0.f, 0.01f, abs(d)));
 	}
