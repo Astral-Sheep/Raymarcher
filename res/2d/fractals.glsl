@@ -99,23 +99,26 @@ float sdf_menger_carpet(const vec2 p)
 	return d;
 }
 
-float sdf_koch_curve(in vec2 p)
-{
-	float r = length(p);
-	float th = mod(atan(p.y, p.x), 2.f * PI / 3.f);
-	p = vec2(r * cos(th), r * sin(th));
+//float sdf_koch_curve(in vec2 p)
+//{
+	//float r = length(p);
+	//float th = mod(
+		//atan(p.y, p.x),
+		//2.f * PI / 3.f
+	//);
+	//p = vec2(r * cos(th), r * sin(th));
 
-	float d = sdf_triangle(p, 1.f);
-	const float h = sqrt(3.f) * 0.5f;
+	//float d = sdf_triangle(p, 1.f);
+	//const float h = sqrt(3.f) * 0.5f;
 
-	for (int i = 0; i < u_Iterations; i++)
-	{
-		float c = sdf_triangle(rotate(p, PI * (i + 1.f)), 1.f);
-		d = min(d, c);
-	}
+	//for (int i = 0; i < u_Iterations; i++)
+	//{
+		//float c = sdf_triangle(rotate(p, PI / (3.f * (i + 1.f))), 1.f);
+		//d = min(d, c);
+	//}
 
-	return d;
-}
+	//return d;
+//}
 
 float get_dist(const vec2 p)
 {
@@ -125,8 +128,8 @@ float get_dist(const vec2 p)
 			return sdf_sierpinski_triangle(p);
 		case MENGER_CARPET:
 			return sdf_menger_carpet(p);
-		case KOCH_CURVE:
-			return sdf_koch_curve(p);
+		//case KOCH_CURVE:
+			//return sdf_koch_curve(p);
 		default:
 			return length(p);
 	}
@@ -139,7 +142,7 @@ float osc(const float v, const float o)
 
 vec3 get_rainbow(const float o)
 {
-	float t = u_Time * 0.5f + mix(0.f, 3.f, o);
+	float t = u_Time * 0.25f + mix(0.f, 3.f, o);
 
 	return vec3(
 		osc(t, -1.f),

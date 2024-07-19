@@ -87,7 +87,7 @@ float sdf_mengersponge(const vec3 p, const vec3 e)
 
 float sdf_jerusalemcube(in vec3 p, const vec3 e)
 {
-	// I found this algorithm on the internet and was too lazy to optimize it, so the lighting is really expensive
+	// I found this algorithm on the internet and was too lazy to optimize it, but it's so heavy it crashes when we get too close
 	const float vB = 0.4f;
 	const float vA = 1.f - 2.f * vB;
 	float s = 1.f;

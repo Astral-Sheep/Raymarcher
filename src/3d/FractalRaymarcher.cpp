@@ -4,20 +4,20 @@
 
 using namespace GL;
 
-enum Fractal
-{
-	MengerSponge = 0,
-	JerusalemCube = 1,
-	Max = 3,
-};
-
-static const char *fractals[Max] = {
-	"Menger Sponge",
-	"Jerusalem Cube",
-};
-
 namespace _3D
 {
+	enum Fractal
+	{
+		MengerSponge = 0,
+		JerusalemCube = 1,
+		Max = 2,
+	};
+
+	static const char *fractals[Max] = {
+		"Menger Sponge",
+		"Jerusalem Cube",
+	};
+
 	FractalRaymarcher::FractalRaymarcher()
 		: Raymarcher3D(), mFractal(MengerSponge), mFractalIterations(0), mColor(0.75f)
 	{

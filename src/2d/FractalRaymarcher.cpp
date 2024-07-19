@@ -4,22 +4,22 @@
 
 using namespace GL;
 
-enum Fractal
-{
-	SierpinskiTriangle = 0,
-	MengerCarpet = 1,
-	KochCurve = 2,
-	Max = 3
-};
-
-static const char *const fractals[Max] = {
-	"Sierpinski Triangle",
-	"Menger Carpet",
-	"Koch Curve",
-};
-
 namespace _2D
 {
+	enum Fractal
+	{
+		SierpinskiTriangle = 0,
+		MengerCarpet = 1,
+		/* KochCurve = 2, */
+		Max = 2
+	};
+
+	static const char *const fractals[Max] = {
+		"Sierpinski Triangle",
+		"Menger Carpet",
+		/* "Koch Curve", */
+	};
+
 	FractalRaymarcher::FractalRaymarcher()
 		: Raymarcher2D(), mFractal(SierpinskiTriangle), mIterations(3), mShowDistanceField(false)
 	{
