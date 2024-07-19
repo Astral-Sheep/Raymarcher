@@ -2,6 +2,8 @@
 #include "Engine/Application.hpp"
 #include "Engine/Time.hpp"
 #include "Engine/Window.hpp"
+#include "Engine/events/KeyCodes.h"
+#include "Engine/events/KeyboardEvent.hpp"
 #include "Engine/events/WindowEvent.hpp"
 #include "math/Math.hpp"
 #include "GLCore/core/GLRenderer.hpp"
@@ -15,6 +17,7 @@ Raymarcher::Raymarcher()
 	: mVArray(), mVBuffer(sVertices, sizeof(sVertices)), mLayout(),
 	mIBuffer(sIndices, 2 * 3),
 	mShader(nullptr),
+	mShowImGui(true),
 	mDelta(0.f), mFramerate(0.f), mFramerateUpdateDelay(0.1f)
 {
 	mLayout.Push<float>(2);
@@ -43,6 +46,11 @@ void Raymarcher::_Render(const float pDelta)
 
 void Raymarcher::_RenderImGUI(const float pDelta)
 {
+	if (!mShowImGui)
+	{
+		return;
+	}
+
 	constexpr float WINDOW_WIDTH = 500.f;
 	mDelta += pDelta;
 
@@ -71,6 +79,15 @@ void Raymarcher::_OnEvent(Event &pEvent)
 		WindowResizeEvent &lWREvent = pEvent.Cast<WindowResizeEvent>();
 		mShader->SetUniform2i("u_ScreenSize", lWREvent.GetWidth(), lWREvent.GetHeight());
 		lWREvent.handled = true;
+	}
+	else if (pEvent.GetEventType() == EventType::KeyReleased)
+	{
+		KeyReleasedEvent &lKREvent = pEvent.Cast<KeyReleasedEvent>();
+
+		if (lKREvent.GetKeyCode() == (int)KeyCode::F6)
+		{
+			mShowImGui = !mShowImGui;
+		}
 	}
 }
 

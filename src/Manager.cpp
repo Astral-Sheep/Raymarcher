@@ -11,9 +11,10 @@
 #include "Engine/Application.hpp"
 #include "Engine/events/KeyboardEvent.hpp"
 #include "Engine/events/KeyCodes.h"
+#include <iostream>
 
 Manager::Manager()
-	: mRaymarcher(new _2D::FractalRaymarcher())
+	: mRaymarcher(new _2D::FractalRaymarcher()), mShowImGui(true)
 {
 	AddChild(*mRaymarcher);
 }
@@ -29,6 +30,11 @@ Manager::Manager()
 
 void Manager::_RenderImGUI(const float pDelta)
 {
+	if (!mShowImGui)
+	{
+		return;
+	}
+
 	ImGui::Begin("Selection", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 	ImGui::SetWindowSize(ImVec2(200.f, 250.f));
 	ImGui::SetWindowPos(ImVec2(25.f, 25.f));
@@ -58,12 +64,17 @@ void Manager::_OnEvent(Event &pEvent)
 {
 	if (pEvent.GetEventType() == EventType::KeyReleased)
 	{
-		auto &lEvent = pEvent.Cast<KeyReleasedEvent>();
+		KeyReleasedEvent &lKREvent = pEvent.Cast<KeyReleasedEvent>();
 
-		if (lEvent.GetKeyCode() == (int)KeyCode::F11)
+		if (lKREvent.GetKeyCode() == (int)KeyCode::F11)
 		{
-			Application::Get().GetWindow().SetFullscreen(!Application::Get().GetWindow().IsFullscreen());
-			pEvent.handled = true;
+			Window &lWindow = Application::Get().GetWindow();
+			lWindow.SetFullscreen(!lWindow.IsFullscreen());
+			lKREvent.handled = true;
+		}
+		else if (lKREvent.GetKeyCode() == (int)KeyCode::F6)
+		{
+			mShowImGui = !mShowImGui;
 		}
 	}
 }

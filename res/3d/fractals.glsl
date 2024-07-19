@@ -21,10 +21,11 @@ uniform vec3 u_Color;
 uniform int u_LightBounces;
 
 const float PI = 3.1415926535f;
-const float EPSILON = 0.00002f;
+const float EPSILON = 0.00005f;
 
 const int MENGER_SPONGE = 0;
 const int JERUSALEM_CUBE = 1;
+const int CANTOR_DUST = 2;
 
 struct RaymarchData
 {
@@ -129,6 +130,30 @@ float sdf_jerusalemcube(in vec3 p, const vec3 e)
 	return sdf_box(p, vec3(0.5f)) * s;
 }
 
+float sdf_infinite_cantor_cross(const vec3 p, const vec3 s)
+{
+	return min(min(
+		abs(p.x) - s.x,
+		abs(p.y) - s.y),
+		abs(p.z) - s.z
+	);
+}
+
+float sdf_cantor_dust(in vec3 p, const vec3 s)
+{
+	float d = sdf_box(p, s);
+	float n = 1.f;
+
+	for (int i = 0; i < u_FractalIterationCount; i++)
+	{
+		vec3 q = mod(p + s / n, 2.f * s / n) - s / n;
+		d = max(d, -sdf_infinite_cantor_cross(q, s / (n * 3.f)));
+		n *= 3.f;
+	}
+
+	return d;
+}
+
 //float sdf_sierpinskitetrahedron(in vec3 p, const float s)
 //{
 	//float o = 3.f;
@@ -215,6 +240,9 @@ vec4 get_dist(const vec3 p)
 			break;
 		case JERUSALEM_CUBE:
 			d = sdf_jerusalemcube(p, vec3(1.f));
+			break;
+		case CANTOR_DUST:
+			d = sdf_cantor_dust(p, vec3(1.f));
 			break;
 		default:
 			break;

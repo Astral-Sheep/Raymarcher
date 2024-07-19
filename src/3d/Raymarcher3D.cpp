@@ -107,8 +107,8 @@ namespace _3D
 
 		if (ImGui::CollapsingHeader("Camera"))
 		{
-			ImGui::DragFloat("Camera movement multiplier", &mCameraSpeedMultiplier);
-			ImGui::DragFloat("Camera rotation multiplier", &mCameraRotationMultiplier);
+			ImGui::DragFloat("Camera movement multiplier", &mCameraSpeedMultiplier, 0.01f);
+			ImGui::DragFloat("Camera rotation multiplier", &mCameraRotationMultiplier, 0.01f);
 		}
 	}
 }

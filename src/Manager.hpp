@@ -10,6 +10,7 @@ class Manager : public Object
 {
 private:
 	Memory::SharedPtr<Raymarcher> mRaymarcher;
+	bool mShowImGui;
 
 	void _RenderImGUI(const float pDelta) override;
 	void _OnEvent(Event &pEvent) override;

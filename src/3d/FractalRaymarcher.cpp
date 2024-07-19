@@ -10,16 +10,18 @@ namespace _3D
 	{
 		MengerSponge = 0,
 		JerusalemCube = 1,
-		Max = 2,
+		CantorDust = 2,
+		Max = 3
 	};
 
 	static const char *fractals[Max] = {
 		"Menger Sponge",
 		"Jerusalem Cube",
+		"Cantor Dust"
 	};
 
 	FractalRaymarcher::FractalRaymarcher()
-		: Raymarcher3D(), mFractal(MengerSponge), mFractalIterations(0), mColor(0.75f)
+		: Raymarcher3D(), mFractal(MengerSponge), mFractalIterations(0), mColor(0.85f)
 	{
 		mShader.reset(Shader::FromGLSLTextFiles("res/vertex.glsl", "res/3d/fractals.glsl"));
 		InitShader();

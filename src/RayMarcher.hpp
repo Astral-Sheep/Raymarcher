@@ -47,6 +47,8 @@ private:
 	float mFramerate;
 	float mFramerateUpdateDelay;
 
+	bool mShowImGui;
+
 protected:
 	Memory::UniquePtr<GL::Shader> mShader;
 
