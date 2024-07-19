@@ -10,13 +10,15 @@ namespace _2D
 	{
 		SierpinskiTriangle = 0,
 		MengerCarpet = 1,
+		CantorDust = 2,
 		/* KochCurve = 2, */
-		Max = 2
+		Max = 3
 	};
 
 	static const char *const fractals[Max] = {
 		"Sierpinski Triangle",
 		"Menger Carpet",
+		"Cantor Dust"
 		/* "Koch Curve", */
 	};
 

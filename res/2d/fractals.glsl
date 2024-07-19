@@ -4,7 +4,8 @@ const float PI = 3.1415926535f;
 
 const int SIERPINSKI_TRIANGLE = 0;
 const int MENGER_CARPET = 1;
-const int KOCH_CURVE = 2;
+const int CANTOR_DUST = 2;
+const int KOCH_CURVE = 3;
 
 layout(location = 0) out vec4 color;
 
@@ -99,6 +100,22 @@ float sdf_menger_carpet(const vec2 p)
 	return d;
 }
 
+float sdf_cantor_dust(const vec2 p)
+{
+	float d = sdf_square(p, vec2(1.f));
+	float s = 1.f;
+
+	for (int i = 0; i < u_Iterations; i++)
+	{
+		vec2 q = mod(p + vec2(1.f / s), vec2(2.f / s)) - vec2(1.f / s);
+		s *= 3.f;
+		float c = min(abs(q.x), abs(q.y)) - 1.f / s;
+		d = max(d, -c);
+	}
+
+	return d;
+}
+
 //float sdf_koch_curve(in vec2 p)
 //{
 	//float r = length(p);
@@ -128,6 +145,8 @@ float get_dist(const vec2 p)
 			return sdf_sierpinski_triangle(p);
 		case MENGER_CARPET:
 			return sdf_menger_carpet(p);
+		case CANTOR_DUST:
+			return sdf_cantor_dust(p);
 		//case KOCH_CURVE:
 			//return sdf_koch_curve(p);
 		default:
