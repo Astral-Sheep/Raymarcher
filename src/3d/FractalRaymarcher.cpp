@@ -66,12 +66,12 @@ namespace _3D
 
 			if (lKPEvent.GetKeyCode() == (int)KeyCode::Up)
 			{
-				mIterations = Math::Clamp(mIterations + 1, 0, 10);
+				mFractalIterations = Math::Clamp(mFractalIterations + 1, 0, 10);
 				lKPEvent.handled = true;
 			}
 			else if (lKPEvent.GetKeyCode() == (int)KeyCode::Down)
 			{
-				mIterations = Math::Clamp(mIterations - 1, 0, 10);
+				mFractalIterations = Math::Clamp(mFractalIterations - 1, 0, 10);
 				lKPEvent.handled = true;
 			}
 		}
