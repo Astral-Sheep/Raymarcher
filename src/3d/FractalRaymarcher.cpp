@@ -1,5 +1,7 @@
 #include "FractalRaymarcher.hpp"
 #include "Engine/Time.hpp"
+#include "Engine/events/KeyboardEvent.hpp"
+#include "Engine/events/KeyCodes.h"
 #include "imgui/imgui.h"
 
 using namespace GL;
@@ -47,6 +49,32 @@ namespace _3D
 		mShader->SetUniform1i("u_FractalIterationCount", mFractalIterations);
 		mShader->SetUniform3f("u_Color", mColor.r, mColor.g, mColor.b);
 		Raymarcher3D::_Render(pDelta);
+	}
+
+	void FractalRaymarcher::_OnEvent(Event &pEvent)
+	{
+		Raymarcher3D::_OnEvent(pEvent);
+
+		if (pEvent.handled)
+		{
+			return;
+		}
+
+		if (pEvent.GetEventType() == EventType::KeyPressed)
+		{
+			KeyPressedEvent &lKPEvent = pEvent.Cast<KeyPressedEvent>();
+
+			if (lKPEvent.GetKeyCode() == (int)KeyCode::Up)
+			{
+				mIterations = Math::Clamp(mIterations + 1, 0, 10);
+				lKPEvent.handled = true;
+			}
+			else if (lKPEvent.GetKeyCode() == (int)KeyCode::Down)
+			{
+				mIterations = Math::Clamp(mIterations - 1, 0, 10);
+				lKPEvent.handled = true;
+			}
+		}
 	}
 }
 

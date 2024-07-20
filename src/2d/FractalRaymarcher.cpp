@@ -1,5 +1,8 @@
 #include "FractalRaymarcher.hpp"
 #include "Engine/Time.hpp"
+#include "Engine/events/Event.hpp"
+#include "Engine/events/KeyCodes.h"
+#include "Engine/events/KeyboardEvent.hpp"
 #include "imgui/imgui.h"
 
 using namespace GL;
@@ -48,6 +51,32 @@ namespace _2D
 		mShader->SetUniform1i("u_Iterations", mIterations);
 		mShader->SetUniform1i("u_ShowDistanceField", mShowDistanceField);
 		Raymarcher2D::_Render(pDelta);
+	}
+
+	void FractalRaymarcher::_OnEvent(Event &pEvent)
+	{
+		Raymarcher2D::_OnEvent(pEvent);
+
+		if (pEvent.handled)
+		{
+			return;
+		}
+
+		if (pEvent.GetEventType() == EventType::KeyPressed)
+		{
+			KeyPressedEvent &lKPEvent = pEvent.Cast<KeyPressedEvent>();
+
+			if (lKPEvent.GetKeyCode() == (int)KeyCode::Up)
+			{
+				mIterations = Math::Clamp(mIterations + 1, 0, 10);
+				lKPEvent.handled = true;
+			}
+			else if (lKPEvent.GetKeyCode() == (int)KeyCode::Down)
+			{
+				mIterations = Math::Clamp(mIterations - 1, 0, 10);
+				lKPEvent.handled = true;
+			}
+		}
 	}
 }
 

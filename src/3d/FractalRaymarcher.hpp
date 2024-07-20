@@ -14,6 +14,7 @@ namespace _3D
 
 		void RenderImGuiParameters() override;
 		void _Render(const float pDelta) override;
+		void _OnEvent(Event &pEvent) override;
 
 	public:
 		FractalRaymarcher();
