@@ -13,7 +13,7 @@
 #include "Engine/events/KeyCodes.h"
 
 Manager::Manager()
-	: mRaymarcher(new _2D::FractalRaymarcher()), mShowImGui(true)
+	: mRaymarcher(new _2D::ShapesRaymarcher()), mShowImGui(true)
 {
 	AddChild(*mRaymarcher);
 }
