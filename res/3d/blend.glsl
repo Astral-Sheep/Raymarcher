@@ -39,7 +39,7 @@ float sdf_sphere(const vec3 p, const float r)
 
 float sdf_box(const vec3 p, const vec3 e)
 {
-	const vec3 q = abs(p) - e;
+	vec3 q = abs(p) - e;
 	return length(max(q, vec3(0.f))) + min(max(q.x, max(q.y, q.z)), 0.f);
 }
 
@@ -133,7 +133,7 @@ struct RaymarchData
 	int it;
 };
 
-RaymarchData raymarch(const vec3 pCameraPos, const vec3 pRayDir)
+RaymarchData raymarch(const vec3 ro, const vec3 rd)
 {
 	float d = 0.f;
 	float mn = u_MaxDistance;
@@ -141,7 +141,7 @@ RaymarchData raymarch(const vec3 pCameraPos, const vec3 pRayDir)
 
 	for (; i < u_IterationCount; i++)
 	{
-		float r = get_dist(pCameraPos + pRayDir * d);
+		float r = get_dist(ro + rd * d);
 		d += r;
 		mn = min(mn, r);
 
@@ -182,33 +182,34 @@ vec3 get_light(const vec3 p, const vec3 c)
 
 mat2 rot2(const float pAngle)
 {
-	float cos = cos(pAngle);
-	float sin = sin(pAngle);
+	float cs = cos(pAngle);
+	float sn = sin(pAngle);
 	return mat2(
-		cos, -sin,
-		sin, cos
+		cs, -sn,
+		sn,  cs
 	);
 }
 
 void main()
 {
+	vec3 ro = u_CameraPos;
 	vec3 rd = normalize(vec3(v_UV, 1.f));
 	rd.yz = rot2(u_CameraRot.x) * rd.yz;
 	rd.xz = rot2(u_CameraRot.y) * rd.xz;
 
 	if (u_DebugIterations)
 	{
-		color = vec4(vec3(raymarch(u_CameraPos, rd).it / (u_IterationCount - 1.f)), 1.f);
+		color = vec4(vec3(raymarch(ro, rd).it / (u_IterationCount - 1.f)), 1.f);
 		return;
 	}
 
-	RaymarchData data = raymarch(u_CameraPos, rd);
+	RaymarchData data = raymarch(ro, rd);
 
 	if (data.d < u_MaxDistance)
 	{
-		vec3 lColor = data.c * get_light(u_CameraPos + rd * data.d, u_LightColor);
-		lColor += data.c * vec3(0.15f);
-		color = vec4(lColor, 1.f);
+		vec3 c = data.c * get_light(ro + rd * data.d, u_LightColor);
+		c += data.c * vec3(0.15f);
+		color = vec4(c, 1.f);
 	}
 	else
 	{

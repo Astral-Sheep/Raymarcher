@@ -182,7 +182,7 @@ float sdf_circle(const vec2 p, const float r)
 
 float sdf_square(const vec2 p, const vec2 s)
 {
-	const vec2 d = abs(p) - s;
+	vec2 d = abs(p) - s;
 	return length(max(d, 0.f)) + min(max(d.x, d.y), 0.f);
 }
 
@@ -198,14 +198,14 @@ float sdf_segment(const vec2 p, const vec2 a, const vec2 b)
 {
 	vec2 pa = p - a;
 	vec2 ba = b - a;
-	float h = clamp(dot(pa, ba) / dot(ba, ba), 0.f, 1.f);
+	float h = clamp(dot(pa, ba) / dot2(ba), 0.f, 1.f);
 	return length(pa - ba * h);
 }
 
 float sdf_rhombus(in vec2 p, const vec2 s)
 {
 	p = abs(p);
-	float h = clamp(ndot(s - 2.f * p, s) / dot(s, s), -1.f, 1.f);
+	float h = clamp(ndot(s - 2.f * p, s) / dot2(s), -1.f, 1.f);
 	float d = length(p - 0.5f * s * vec2(1.f - h, 1.f + h));
 	return d * sign(p.x * s.y + p.y * s.x - s.x * s.y);
 }
@@ -219,9 +219,9 @@ float sdf_isosceles_trapezoid(in vec2 p, const float r1, const float r2, const f
 		p.x - min(p.x, (p.y < 0.f ? r1 : r2)),
 		abs(p.y) - he
 	);
-	vec2 cb = p - k1 + k2 * clamp(dot(k1 - p, k2) / dot(k2, k2), 0.f, 1.f);
+	vec2 cb = p - k1 + k2 * clamp(dot(k1 - p, k2) / dot2(k2), 0.f, 1.f);
 	float s = (cb.x < 0.f && ca.y < 0.f) ? -1.f : 1.f;
-	return s * sqrt(min(dot(ca, ca), dot(cb, cb)));
+	return s * sqrt(min(dot2(ca), dot2(cb)));
 }
 
 float sdf_parallelogram(in vec2 p, const float wi, const float he, const float sk)
@@ -230,12 +230,12 @@ float sdf_parallelogram(in vec2 p, const float wi, const float he, const float s
 	p = (p.y < 0.f) ? -p : p;
 	vec2 w = p - e;
 	w.x -= clamp(w.x, -wi, wi);
-	vec2 d = vec2(dot(w, w), -w.y);
+	vec2 d = vec2(dot2(w), -w.y);
 	float s = p.x * e.y - p.y * e.x;
 	p = s < 0.f ? -p : p;
 	vec2 v = p - vec2(wi, 0.f);
-	v -= e * clamp(dot(v, e) / dot(e, e), -1.f, 1.f);
-	d = min(d, vec2(dot(v, v), wi * he - abs(s)));
+	v -= e * clamp(dot(v, e) / dot2(e), -1.f, 1.f);
+	d = min(d, vec2(dot2(v), wi * he - abs(s)));
 	return sqrt(d.x) * sign(-d.y);
 }
 
@@ -257,12 +257,12 @@ float sdf_equilateral_triangle(in vec2 p, const float r)
 float sdf_isosceles_triangle(in vec2 p, const vec2 q)
 {
 	p.x = abs(p.x);
-	vec2 a = p - q * clamp(dot(p, q) / dot(q, q), 0.f, 1.f);
+	vec2 a = p - q * clamp(dot(p, q) / dot2(q), 0.f, 1.f);
 	vec2 b = p - q * vec2(clamp(p.x / q.x, 0.f, 1.f), 1.f);
 	float s = -sign(q.y);
 	vec2 d = min(
-		vec2(dot(a, a), s * (p.x * q.y - p.y * q.x)),
-		vec2(dot(b, b), s * (p.y - q.y))
+		vec2(dot2(a), s * (p.x * q.y - p.y * q.x)),
+		vec2(dot2(b), s * (p.y - q.y))
 	);
 	return -sqrt(d.x) * sign(d.y);
 }
@@ -275,14 +275,14 @@ float sdf_triangle(const vec2 p, const vec2 p0, const vec2 p1, const vec2 p2)
 	vec2 v0 = p - p0;
 	vec2 v1 = p - p1;
 	vec2 v2 = p - p2;
-	vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.f, 1.f);
-	vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.f, 1.f);
-	vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.f, 1.f);
+	vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot2(e0), 0.f, 1.f);
+	vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot2(e1), 0.f, 1.f);
+	vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot2(e2), 0.f, 1.f);
 	float s = sign(e0.x * e2.y - e0.y * e2.x);
 	vec2 d = min(min(
-		vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
-		vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
-		vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x))
+		vec2(dot2(pq0), s * (v0.x * e0.y - v0.y * e0.x)),
+		vec2(dot2(pq1), s * (v1.x * e1.y - v1.y * e1.x))),
+		vec2(dot2(pq2), s * (v2.x * e2.y - v2.y * e2.x))
 	);
 	return -sqrt(d.x) * sign(d.y);
 }
@@ -312,7 +312,7 @@ float sdf_regular_pentagon(in vec2 p, const float r)
 	const vec3 k = vec3(0.809016994f, 0.587785252f, 0.726542528f);
 	p.x = abs(p.x);
 	p -= 2.f * min(dot(vec2(-k.x, k.y), p), 0.f) * vec2(-k.x, k.y);
-	p -= 2.f * min(dot(vec2(k.x, k.y), p), 0.f) * vec2(k.x, k.y);
+	p -= 2.f * min(dot(k.xy, p), 0.f) * k.xy;
 	p -= vec2(clamp(p.x, -r * k.z, r * k.z), r);
 	return length(p) * sign(p.y);
 }
@@ -330,7 +330,7 @@ float sdf_regular_octogon(in vec2 p, const float r)
 {
 	const vec3 k = vec3(-0.9238795325f, 0.3826834323f, 0.4142135623f);
 	p = abs(p);
-	p -= 2.f * min(dot(vec2(k.x, k.y), p), 0.f) * vec2(k.x, k.y);
+	p -= 2.f * min(dot(k.xy, p), 0.f) * k.xy;
 	p -= 2.f * min(dot(vec2(-k.x, k.y), p), 0.f) * vec2(-k.x, k.y);
 	p -= vec2(clamp(p.x, -k.z * r, k.z * r), r);
 	return length(p) * sign(p.y);
@@ -356,7 +356,7 @@ float sdf_star5(in vec2 p, const float r, const float rf)
 	p.x = abs(p.x);
 	p.y -= r;
 	vec2 ba = rf * vec2(-k1.y, k1.x) - vec2(0.f, 1.f);
-	float h = clamp(dot(p, ba) / dot(ba, ba), 0.f, r);
+	float h = clamp(dot(p, ba) / dot2(ba), 0.f, r);
 	return length(p - ba * h) * sign(p.y * ba.x - p.x * ba.y);
 }
 
@@ -456,9 +456,9 @@ float sdf_simple_egg(in vec2 p, const float ra, const float rb)
 	const float k = sqrt(3.f);
 	p.x = abs(p.x);
 	float r = ra - rb;
-	return ((p.y < 0.f)				? length(vec2(p.x, p.y)) - r :
-			(k * (p.x + r) < p.y)	? length(vec2(p.x, p.y - k * r)) :
-									  length(vec2(p.x + r, p.y)) - 2.f * r) - rb;
+	return ((p.y < 0.f)           ? length(vec2(p.x, p.y)) - r :
+	        (k * (p.x + r) < p.y) ? length(vec2(p.x, p.y - k * r)) :
+	                        	    length(vec2(p.x + r, p.y)) - 2.f * r) - rb;
 }
 
 float sdf_heart(in vec2 p)

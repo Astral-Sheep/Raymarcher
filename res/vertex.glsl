@@ -8,7 +8,6 @@ out vec2 v_UV;
 out float v_AspectRatio;
 
 uniform ivec2 u_ScreenSize = DEFAULT_SCREEN_SIZE;
-//uniform float u_AspectRatio = 1.f;
 
 void main()
 {

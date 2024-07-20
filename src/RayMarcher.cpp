@@ -7,7 +7,6 @@
 #include "Engine/events/WindowEvent.hpp"
 #include "math/Math.hpp"
 #include "GLCore/core/GLRenderer.hpp"
-#include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
 
 using namespace GL;

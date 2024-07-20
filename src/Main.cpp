@@ -1,12 +1,13 @@
 #include "Manager.hpp"
 #include "Engine/Application.hpp"
+#include "Engine/utils/Memory.hpp"
 
 using namespace Engine;
 
 int main()
 {
 	std::unique_ptr<Application> app(new Application({ "Ray Marcher" }));
-	std::shared_ptr<Manager> lManager(new Manager());
+	Memory::SharedPtr<Manager> lManager(new Manager());
 	app->GetRoot().AddObject(*lManager);
 	app->Run();
 	return 0;

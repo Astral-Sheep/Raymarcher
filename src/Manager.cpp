@@ -11,7 +11,6 @@
 #include "Engine/Application.hpp"
 #include "Engine/events/KeyboardEvent.hpp"
 #include "Engine/events/KeyCodes.h"
-#include <iostream>
 
 Manager::Manager()
 	: mRaymarcher(new _2D::FractalRaymarcher()), mShowImGui(true)

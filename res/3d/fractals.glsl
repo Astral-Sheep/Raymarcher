@@ -78,9 +78,9 @@ float sdf_mengersponge(const vec3 p, const vec3 e)
 	for (int i = 0; i < u_FractalIterationCount; i++)
 	{
 		vec3 q = mod(p + vec3(e / s), vec3(2.f * e / s)) - vec3(e / s);
-		float c = sdf_infinitecross(q, vec3(e / (s * 3.f)));
-		d = max(d, -c);
 		s *= 3.f;
+		float c = sdf_infinitecross(q, vec3(e / s));
+		d = max(d, -c);
 	}
 
 	return d;
@@ -147,8 +147,9 @@ float sdf_cantor_dust(in vec3 p, const vec3 s)
 	for (int i = 0; i < u_FractalIterationCount; i++)
 	{
 		vec3 q = mod(p + s / n, 2.f * s / n) - s / n;
-		d = max(d, -sdf_infinite_cantor_cross(q, s / (n * 3.f)));
 		n *= 3.f;
+		float c = sdf_infinite_cantor_cross(q, s / n);
+		d = max(d, -c);
 	}
 
 	return d;
@@ -285,7 +286,7 @@ float softshadow(const vec3 p, const vec3 dir, float mint, float maxt, float k)
 	return r;
 }
 
-RaymarchData raymarch(const vec3 p, const vec3 dir)
+RaymarchData raymarch(const vec3 ro, const vec3 rd)
 {
 	float d = 0.f;
 	float mn = u_MaxDistance;
@@ -294,7 +295,7 @@ RaymarchData raymarch(const vec3 p, const vec3 dir)
 
 	for (; i < u_IterationCount; i++)
 	{
-		vec4 r = get_dist(p + dir * d);
+		vec4 r = get_dist(ro + rd * d);
 		d += r.w;
 		c = r.rgb;
 		mn = min(mn, r.w);
@@ -328,14 +329,14 @@ void main()
 {
 	color = vec4(vec3(0.f), 1.f);
 
-	vec3 rayorigin = u_CameraPos;
-	vec3 raydir = normalize(vec3(v_UV * 0.5f, 1.f));
-	raydir.yz = rot2(u_CameraRot.x) * raydir.yz;
-	raydir.xz = rot2(u_CameraRot.y) * raydir.xz;
+	vec3 ro = u_CameraPos;
+	vec3 rd = normalize(vec3(v_UV * 0.5f, 1.f));
+	rd.yz = rot2(u_CameraRot.x) * rd.yz;
+	rd.xz = rot2(u_CameraRot.y) * rd.xz;
 
 	if (u_DebugIterations)
 	{
-		color = vec4(vec3(raymarch(rayorigin, raydir).it / (u_IterationCount - 1.f)), 1.f);
+		color = vec4(vec3(raymarch(ro, rd).it / (u_IterationCount - 1.f)), 1.f);
 		return;
 	}
 
@@ -344,20 +345,20 @@ void main()
 
 	for (int i = 0; i < u_LightBounces; i++)
 	{
-		RaymarchData data = raymarch(rayorigin, raydir);
-		vec3 p = rayorigin + raydir * data.d;
+		RaymarchData data = raymarch(ro, rd);
+		vec3 p = ro + rd * data.d;
 		vec3 n = get_normal(p);
 		float shad = softshadow(p + (u_MinDistance * 3.f) * n, lightDir, 0.f, 50.f, 6.f);
 
 		float diffuse = max(0.f, dot(n, lightDir));
-		float specular = pow(clamp(dot(reflect(-lightDir, n), -raydir), 0.f, 1.f), 8.f);
+		float specular = pow(clamp(dot(reflect(-lightDir, n), -rd), 0.f, 1.f), 8.f);
 
 		if (data.d < u_MaxDistance && data.mn <= u_MinDistance)
 		{
 			color.rgb += c * (diffuse + specular) * data.c * u_LightColor * shad;
-			c *= data.c * mix(0.2f, 0.65f, 1.f - max(0.f, dot(-raydir, n)));
-			rayorigin = p + n * (EPSILON * 3.f);
-			raydir = reflect(raydir, n);
+			c *= data.c * mix(0.2f, 0.65f, 1.f - max(0.f, dot(-rd, n)));
+			ro = p + n * (EPSILON * 3.f);
+			rd = reflect(rd, n);
 		}
 		else
 		{

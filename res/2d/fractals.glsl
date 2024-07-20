@@ -55,11 +55,6 @@ float sdf_triangle(in vec2 p, const float r)
 	return -length(p) * sign(p.y);
 }
 
-float sdf_upsidedown_triangle(const vec2 p, const float r)
-{
-	return sdf_triangle(vec2(p.x, -p.y), r);
-}
-
 float sdf_sierpinski_triangle(const vec2 p)
 {
 	float d = sdf_triangle(p, 1.f);
@@ -70,10 +65,7 @@ float sdf_sierpinski_triangle(const vec2 p)
 
 	for (int i = 0; i < u_Iterations; i++)
 	{
-		vec2 m = vec2(
-			0.5f / s,
-			1.5f * h1 / s
-		);
+		vec2 m = vec2(0.5f / s, 1.5f * h1 / s);
 		vec2 q = mod(vec2(p.x, p.y + o) + m, m * 2.f) - m;
 		float c = sdf_triangle(rotate(vec2(q.x, q.y), PI), 0.5f / s);
 		d = max(d, -c);
@@ -92,9 +84,9 @@ float sdf_menger_carpet(const vec2 p)
 	for (int i = 0; i < u_Iterations; i++)
 	{
 		vec2 q = mod(p + vec2(1.f / s), vec2(2.f / s)) - vec2(1.f / s);
-		float c = sdf_square(q, vec2(1.f / (s * 3.f)));
-		d = max(d, -c);
 		s *= 3.f;
+		float c = sdf_square(q, vec2(1.f / s));
+		d = max(d, -c);
 	}
 
 	return d;
