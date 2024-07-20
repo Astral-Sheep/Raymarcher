@@ -65,7 +65,7 @@ public:
 
 	inline virtual const char *GetName() const override
 	{
-		return "RayMarcher";
+		return "Raymarcher";
 	}
 
 	virtual RaymarcherType GetType() const = 0;
