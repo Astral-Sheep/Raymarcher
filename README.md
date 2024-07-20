@@ -26,33 +26,37 @@ I made a basic 2D and 3D raymarcher in GLSL with OpenGL and C++ for fun.
 
 2D Blending:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blend_2d.mp4]
+![Blending 2D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blend_2d.gif)
 
 2D Repetition:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/repetition_2d.mp4]
+![Repetition 2D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/repetition_2d.gif)
 
 Sierpinski triangle:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/sierpinski_triangle.mp4]
+![Sierpinski Triangle](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/sierpinski_triangle.gif)
 
 Menger carpet:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/menger_carpet.mp4]
+![Menger Carpet](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/menger_carpet.gif)
 
 Cantor dust 2D:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/cantor_dust_2d.mp4]
+![Cantor Dust 2D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/cantor_dust_2d.gif)
 
 3D Blending:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blending_3d.mp4]
+![Blending 3D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blending_3d.gif)
 
 3D Repetition:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/repetition_3d.mp4]
+![Repetition 3D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/repetition_3d.gif)
 
 Menger sponge:
 
-![https://github.com/Astral-Sheep/Raymarcher/blob/master/media/menger_sponge.mp4]
+![Menger Sponge](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/menger_sponge.gif)
+
+Cantor Dust 3D:
+
+![Cantor Dust 3D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/cantor_dust_3d.gif)
 
