@@ -26,7 +26,7 @@ I made a basic 2D and 3D raymarcher in GLSL with OpenGL and C++ for fun.
 
 2D Blending:
 
-![Blending 2D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blend_2d.gif)
+![Blending 2D](https://github.com/Astral-Sheep/Raymarcher/blob/master/media/blending_2d.gif)
 
 2D Repetition:
 
