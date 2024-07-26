@@ -7,6 +7,7 @@
 #include "imgui/imgui.h"
 #include "math/Math.hpp"
 #include "math/Vector2.hpp"
+#include <iostream>
 
 using namespace GL;
 using namespace Math;
@@ -67,7 +68,7 @@ namespace _2D
 				mMousePos.y = lMMEvent.GetY();
 				mShader->SetUniform2f(
 					"u_MousePos",
-					mMousePos.x / Application::Get().GetWindow().GetHeight(),
+					mMousePos.x / Application::Get().GetWindow().GetWidth(),
 					-mMousePos.y / Application::Get().GetWindow().GetHeight()
 				);
 
@@ -77,7 +78,8 @@ namespace _2D
 			case EventType::MouseScrolled:
 			{
 				MouseScrolledEvent lMSEvent = pEvent.Cast<MouseScrolledEvent>();
-				mZoom = Math::Clamp(mZoom + lMSEvent.GetYOffset(), -10.f, 20.f);
+				mZoom = std::max(mZoom + lMSEvent.GetYOffset(), -10.f);
+				/* mZoom = Math::Clamp(mZoom + lMSEvent.GetYOffset(), -10.f, 20.f); */
 				pEvent.handled = true;
 				break;
 			}

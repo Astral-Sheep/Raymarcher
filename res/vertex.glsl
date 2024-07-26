@@ -6,15 +6,16 @@ layout(location = 0) in vec4 position;
 
 out vec2 v_UV;
 out float v_AspectRatio;
+out float v_SizeFactor;
 
 uniform ivec2 u_ScreenSize = DEFAULT_SCREEN_SIZE;
 
 void main()
 {
-	vec2 sizeFactor = vec2(float(u_ScreenSize.x) / DEFAULT_SCREEN_SIZE.x, float(u_ScreenSize.y) / DEFAULT_SCREEN_SIZE.y);
+	v_SizeFactor = max(float(u_ScreenSize.x) / DEFAULT_SCREEN_SIZE.x, float(u_ScreenSize.y) / DEFAULT_SCREEN_SIZE.y);
 	gl_Position = position;
-	v_AspectRatio = float(u_ScreenSize.x) / u_ScreenSize.y;
-	v_UV = position.xy * sizeFactor;
+	v_AspectRatio = float(u_ScreenSize.x) / float(u_ScreenSize.y);
+	v_UV = position.xy * v_SizeFactor;
 	v_UV.x *= v_AspectRatio;
 }
 

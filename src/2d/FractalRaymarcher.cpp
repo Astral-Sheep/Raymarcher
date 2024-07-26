@@ -4,8 +4,11 @@
 #include "Engine/events/KeyCodes.h"
 #include "Engine/events/KeyboardEvent.hpp"
 #include "imgui/imgui.h"
+#include "math/Math.hpp"
+#include <cmath>
 
 using namespace GL;
+using namespace Math;
 
 namespace _2D
 {
@@ -25,8 +28,23 @@ namespace _2D
 		/* "Koch Curve", */
 	};
 
+	static const int maxIterations[Max] = {
+		21,
+		15,
+		14,
+	};
+
+	static const float maxZoom[Max] = {
+		50.f,
+		57.f,
+		54.f,
+	};
+
+	const Vector2F FractalRaymarcher::CAMERA_POS = Vector2F(0.0265505f, 0.288753f);
+
 	FractalRaymarcher::FractalRaymarcher()
-		: Raymarcher2D(), mFractal(SierpinskiTriangle), mIterations(3), mShowDistanceField(false)
+		: Raymarcher2D(), mFractal(SierpinskiTriangle), mIterations(3), mShowDistanceField(false),
+		mAutoCamera(false), mCameraState(0.f)
 	{
 		mShader.reset(Shader::FromGLSLTextFiles("res/vertex.glsl", "res/2d/fractals.glsl"));
 		InitShader();
@@ -37,11 +55,25 @@ namespace _2D
 		if (ImGui::CollapsingHeader("Fractals"))
 		{
 			ImGui::Combo("Fractal", &mFractal, fractals, Max);
-			ImGui::SliderInt("Iterations", &mIterations, 0, 10);
+			ImGui::SliderInt("Iterations", &mIterations, 0, 100);
 			ImGui::Checkbox("Show distance field", &mShowDistanceField);
 		}
 
 		Raymarcher2D::RenderImGuiParameters();
+	}
+
+	void FractalRaymarcher::_Process(const float pDelta)
+	{
+		if (mAutoCamera)
+		{
+			mCameraState += pDelta;
+			mZoom = Math::Lerp(0.f, maxZoom[mFractal], (std::cos((mCameraState + Math::PI) / MOVEMENT_DURATION + Math::PI) + 1.f) * 0.5f);
+			mIterations = (int)std::round(Math::Lerp(0.f, (float)maxIterations[mFractal], mZoom / maxZoom[mFractal]));
+		}
+		else
+		{
+			Raymarcher2D::_Process(pDelta);
+		}
 	}
 
 	void FractalRaymarcher::_Render(const float pDelta)
@@ -62,19 +94,34 @@ namespace _2D
 			return;
 		}
 
-		if (pEvent.GetEventType() == EventType::KeyPressed)
+		if (pEvent.GetEventType() == EventType::KeyReleased)
 		{
-			KeyPressedEvent &lKPEvent = pEvent.Cast<KeyPressedEvent>();
+			KeyReleasedEvent &lKREvent = pEvent.Cast<KeyReleasedEvent>();
 
-			if (lKPEvent.GetKeyCode() == (int)KeyCode::Up)
+			switch (lKREvent.GetKeyCode())
 			{
-				mIterations = Math::Clamp(mIterations + 1, 0, 10);
-				lKPEvent.handled = true;
-			}
-			else if (lKPEvent.GetKeyCode() == (int)KeyCode::Down)
-			{
-				mIterations = Math::Clamp(mIterations - 1, 0, 10);
-				lKPEvent.handled = true;
+				case (int)KeyCode::Up:
+					mIterations = Math::Clamp(mIterations + 1, 0, 100);
+					lKREvent.handled = true;
+					break;
+				case (int)KeyCode::Down:
+					mIterations = Math::Clamp(mIterations - 1, 0, 100);
+					lKREvent.handled = true;
+					break;
+				case (int)KeyCode::F7:
+					mAutoCamera = !mAutoCamera;
+
+					if (mAutoCamera)
+					{
+						/* float lRatio = mZoom / maxZoom[mFractal]; */
+						/* mCameraState = Math::Abs(MOVEMENT_DURATION / Math::PI * (std::acos(lRatio * 2.f - 1.f) - Math::PI)); */
+						mCameraState = 0.f;
+					}
+
+					lKREvent.handled = true;
+					break;
+				default:
+					break;
 			}
 		}
 	}

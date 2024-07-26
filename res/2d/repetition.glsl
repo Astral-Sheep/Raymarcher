@@ -9,6 +9,7 @@ layout(location = 0) out vec4 color;
 
 in vec2 v_UV;
 in float v_AspectRatio;
+in float v_SizeFactor;
 
 // -- Default parameters --
 uniform vec2 u_CameraPos;
@@ -79,9 +80,9 @@ void main()
 	if (u_ShowMouseDistance)
 	{
 		vec2 mpos = u_MousePos;
-		mpos.x -= v_AspectRatio * 0.5f;
-		mpos.y += 0.5f;
-		mpos *= 4.f; // 2 (default) x 2 (UV multiplier)
+		mpos += vec2(-0.5f, 0.5f);
+		mpos.x *= v_AspectRatio;
+		mpos *= 4.f * v_SizeFactor; // 2 (default) x 2 (UV multiplier)
 
 		float d = abs(get_dist(u_CameraPos + mpos * zoom));
 		float l = length(uv * zoom - mpos * zoom);
